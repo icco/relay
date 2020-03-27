@@ -6,8 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"os/signal"
-	"syscall"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/go-chi/chi"
@@ -15,6 +13,7 @@ import (
 
 const (
 	permissions = 51264
+	channelID   = "#ops"
 )
 
 func main() {
@@ -29,9 +28,9 @@ func main() {
 	}
 
 	// Create a new Discord session using the provided bot token.
-	dg, err := discordgo.New("Bot " + Token)
+	dg, err := discordgo.New("Bot " + token)
 	if err != nil {
-		log.Falalf("error creating Discord session: %w", err)
+		log.Fatalf("error creating Discord session: %w", err)
 	}
 	defer dg.Close()
 
@@ -48,7 +47,7 @@ func main() {
 			return
 		}
 
-		if err := messageCreate(s, message); err != nil {
+		if err := messageCreate(dg, string(message)); err != nil {
 			log.Printf("could not send message: %w", err)
 			http.Error(w, err.Error(), 500)
 			return
@@ -56,10 +55,10 @@ func main() {
 
 		w.Write([]byte("."))
 	})
-	http.ListenAndServe(fmt.Spritnf(":%s", port), r)
+	http.ListenAndServe(fmt.Sprintf(":%s", port), r)
 }
 
 func messageCreate(s *discordgo.Session, m string) error {
-
-	s.ChannelMessageSend(m.ChannelID, "Pong!")
+	_, err := s.ChannelMessageSend(channelID, "Pong!")
+	return err
 }
