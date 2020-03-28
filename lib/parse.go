@@ -21,7 +21,7 @@ func ReaderToMessage(b io.Reader) (string, error) {
 
 	if data.Sonarr != nil {
 		for _, ep := range data.Sonarr.Episodes {
-			msg += fmt.Sprintf(" - %s %2dx%2d now available.", data.Sonarr.Series.Title, ep.SeasonNumber, ep.EpisodeNumber)
+			msg += fmt.Sprintf(" - %s %dx%02d now available.", data.Sonarr.Series.Title, ep.SeasonNumber, ep.EpisodeNumber)
 		}
 	}
 
