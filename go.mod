@@ -11,5 +11,4 @@ require (
 	github.com/icco/logrus-stackdriver-formatter v0.3.0
 	github.com/sirupsen/logrus v1.5.0
 	go.opencensus.io v0.22.3
-	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
 )
