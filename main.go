@@ -1,8 +1,8 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 
@@ -84,14 +84,18 @@ func main() {
 	})
 
 	r.Post("/hook", func(w http.ResponseWriter, r *http.Request) {
-		var message []byte
-		if _, err := io.ReadFull(r.Body, message); err != nil {
+		var data map[string]string
+		if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
 			log.WithError(err).Error("could not read body")
 			http.Error(w, err.Error(), 500)
 			return
 		}
 
-		if err := messageCreate(dg, string(message)); err != nil {
+		msg := ""
+		for k, v := range data {
+			msg += fmt.Sprintf("%s: %s\n", k, v)
+		}
+		if err := messageCreate(dg, msg); err != nil {
 			log.WithError(err).Error("could not send message")
 			http.Error(w, err.Error(), 500)
 			return
