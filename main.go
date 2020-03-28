@@ -93,13 +93,13 @@ func main() {
 			return
 		}
 
-		rdr1 := ioutil.NopCloser(bytes.NewBuffer(buf))
+		rdr1 := bytes.NewBuffer(buf)
 		rdr2 := ioutil.NopCloser(bytes.NewBuffer(buf))
 		r.Body = rdr2
 
 		var data map[string]string
 		if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
-			log.WithError(err).WithField("body", rdr1).Error("could not decode body")
+			log.WithError(err).WithField("body", rdr1.String()).Error("could not decode body")
 			http.Error(w, err.Error(), 500)
 			return
 		}
