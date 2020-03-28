@@ -70,6 +70,10 @@ func main() {
 	r.Use(middleware.Recoverer)
 	r.Use(LoggingMiddleware())
 
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("hi."))
+	})
+
 	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("hi."))
 	})
