@@ -14,6 +14,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/icco/relay/lib"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
@@ -24,9 +25,11 @@ const (
 	channelID   = "ops"
 )
 
-func main() {
-	InitLogging()
+var (
+	log = lib.InitLogging()
+)
 
+func main() {
 	token := os.Getenv("DISCORD_TOKEN")
 	if token == "" {
 		log.Fatalf("DISCORD_TOKEN is empty")
@@ -75,7 +78,7 @@ func main() {
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
-	r.Use(LoggingMiddleware())
+	r.Use(lib.LoggingMiddleware())
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("hi."))
@@ -97,17 +100,13 @@ func main() {
 		rdr2 := ioutil.NopCloser(bytes.NewBuffer(buf))
 		r.Body = rdr2
 
-		var data map[string]string
-		if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
+		msg, err := lib.ReaderToMessage(r.Body)
+		if err != nil {
 			log.WithError(err).WithField("body", rdr1.String()).Error("could not decode body")
 			http.Error(w, err.Error(), 500)
 			return
 		}
 
-		msg := ""
-		for k, v := range data {
-			msg += fmt.Sprintf("%s: %s\n", k, v)
-		}
 		if err := messageCreate(dg, msg); err != nil {
 			log.WithError(err).Error("could not send message")
 			http.Error(w, err.Error(), 500)
