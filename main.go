@@ -114,7 +114,7 @@ func main() {
 			return
 		}
 
-		w.Write([]byte("."))
+		w.Write([]byte(""))
 	})
 
 	h := &ochttp.Handler{
