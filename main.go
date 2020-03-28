@@ -33,7 +33,7 @@ func main() {
 	if fromEnv := os.Getenv("PORT"); fromEnv != "" {
 		port = fromEnv
 	}
-	log.Printf("Starting up on http://localhost:%s", port)
+	log.Infof("Starting up on http://localhost:%s", port)
 
 	if os.Getenv("ENABLE_STACKDRIVER") != "" {
 		labels := &stackdriver.Labels{}
@@ -60,7 +60,7 @@ func main() {
 	// Create a new Discord session using the provided bot token.
 	dg, err := discordgo.New("Bot " + token)
 	if err != nil {
-		log.Fatalf("error creating Discord session: %w", err)
+		log.WithError(err).Fatal("error creating Discord session")
 	}
 	defer dg.Close()
 
