@@ -59,14 +59,14 @@ func main() {
 	}
 
 	// Create a new Discord session using the provided bot token.
+	log.Debugf("token %q", token)
 	dg, err := discordgo.New("Bot " + token)
 	if err != nil {
 		log.WithError(err).Fatal("error creating Discord session")
 	}
 
-	err = dg.Open()
-	if err != nil {
-		log.WithError(err).Fatal("error opening connection,")
+	if err := dg.Open(); err != nil {
+		log.WithError(err).Fatal("error opening connection")
 	}
 	defer dg.Close()
 
