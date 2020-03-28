@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -11,7 +12,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	"github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
@@ -114,6 +114,42 @@ func main() {
 }
 
 func messageCreate(s *discordgo.Session, m string) error {
-	_, err := s.ChannelMessageSend(channelID, "Pong!")
+	chnl, err := fetchPrimaryTextChannelID(s)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.ChannelMessageSend(chnl, "Pong!")
 	return err
+}
+
+func fetchPrimaryTextChannelID(sess *discordgo.Session) (string, error) {
+	var channelid string
+	guilds, err := sess.UserGuilds(1, "", "")
+	if err != nil {
+		return "", err
+	}
+	guild, err := sess.Guild(guilds[0].ID)
+	if err != nil {
+		return "", err
+	}
+	channels, err := sess.GuildChannels(guild.ID)
+	if err != nil {
+		return "", err
+	}
+	for _, channel := range channels {
+		channel, err = sess.Channel(channel.ID)
+		if err != nil {
+			return "", err
+		}
+		if channel.Type == discordgo.ChannelTypeGuildText {
+			channelid = channel.ID
+			break
+		}
+	}
+
+	if channelid == "" {
+		return "", fmt.Errorf("no primary channel found")
+	}
+	return channelid, nil
 }
