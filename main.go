@@ -3,12 +3,20 @@ package main
 import (
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 
+	"contrib.go.opencensus.io/exporter/stackdriver"
+	"contrib.go.opencensus.io/exporter/stackdriver/monitoredresource"
+	"contrib.go.opencensus.io/exporter/stackdriver/propagation"
 	"github.com/bwmarrin/discordgo"
 	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/sirupsen/logrus"
+	"go.opencensus.io/plugin/ochttp"
+	"go.opencensus.io/stats"
+	"go.opencensus.io/stats/view"
+	"go.opencensus.io/trace"
 )
 
 const (
@@ -16,15 +24,40 @@ const (
 	channelID   = "#ops"
 )
 
+var log = InitLogging()
+
 func main() {
 	token := os.Getenv("DISCORD_TOKEN")
 	if token == "" {
 		log.Fatalf("discord token is empty")
 	}
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
+	port := "8080"
+	if fromEnv := os.Getenv("PORT"); fromEnv != "" {
+		port = fromEnv
+	}
+	log.Printf("Starting up on http://localhost:%s", port)
+
+	if os.Getenv("ENABLE_STACKDRIVER") != "" {
+		labels := &stackdriver.Labels{}
+		labels.Set("app", "relay", "The name of the current app.")
+		sd, err := stackdriver.NewExporter(stackdriver.Options{
+			ProjectID:               "icco-cloud",
+			MonitoredResource:       monitoredresource.Autodetect(),
+			DefaultMonitoringLabels: labels,
+			DefaultTraceAttributes:  map[string]interface{}{"app": "cron"},
+		})
+
+		if err != nil {
+			log.WithError(err).Fatalf("failed to create the stackdriver exporter")
+		}
+		defer sd.Flush()
+
+		view.RegisterExporter(sd)
+		trace.RegisterExporter(sd)
+		trace.ApplyConfig(trace.Config{
+			DefaultSampler: trace.AlwaysSample(),
+		})
 	}
 
 	// Create a new Discord session using the provided bot token.
