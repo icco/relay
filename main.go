@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -12,9 +11,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	"github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ochttp"
-	"go.opencensus.io/stats"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
 )
@@ -24,12 +21,12 @@ const (
 	channelID   = "#ops"
 )
 
-var log = InitLogging()
-
 func main() {
+	InitLogging()
+
 	token := os.Getenv("DISCORD_TOKEN")
 	if token == "" {
-		log.Fatalf("discord token is empty")
+		log.Fatalf("DISCORD_TOKEN is empty")
 	}
 
 	port := "8080"
@@ -68,6 +65,11 @@ func main() {
 	defer dg.Close()
 
 	r := chi.NewRouter()
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Recoverer)
+	r.Use(LoggingMiddleware())
+
 	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("hi."))
 	})
@@ -88,7 +90,18 @@ func main() {
 
 		w.Write([]byte("."))
 	})
-	http.ListenAndServe(fmt.Sprintf(":%s", port), r)
+
+	h := &ochttp.Handler{
+		Handler:     r,
+		Propagation: &propagation.HTTPFormat{},
+	}
+	if err := view.Register([]*view.View{
+		ochttp.ServerRequestCountView,
+		ochttp.ServerResponseCountByStatusCode,
+	}...); err != nil {
+		log.WithError(err).Fatal("Failed to register ochttp views")
+	}
+	log.Fatal(http.ListenAndServe(":"+port, h))
 }
 
 func messageCreate(s *discordgo.Session, m string) error {
