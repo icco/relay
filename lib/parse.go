@@ -19,6 +19,17 @@ func ReaderToMessage(b io.Reader) (string, error) {
 		}
 	}
 
+	if data.Sonarr != nil {
+		for _, ep := range data.Sonarr.Episodes {
+			msg += fmt.Sprintf(" - %s %2dx%2d now available.", data.Sonarr.Series.Title, ep.SeasonNumber, ep.EpisodeNumber)
+		}
+	}
+
+	if data.GoogleCloud != nil {
+		i := data.GoogleCloud.Incident
+		msg += fmt.Sprintf("GCP Alert - %q", i.Summary)
+	}
+
 	return msg, nil
 }
 
