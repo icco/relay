@@ -19,7 +19,7 @@ import (
 
 const (
 	permissions = 51264
-	channelID   = "#ops"
+	channelID   = "ops"
 )
 
 func main() {
