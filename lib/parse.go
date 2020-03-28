@@ -13,10 +13,8 @@ func ReaderToMessage(b io.Reader) (string, error) {
 	}
 
 	msg := ""
-	if data.GenericFlat != nil {
-		for k, v := range *data.GenericFlat {
-			msg += fmt.Sprintf("%s: %s\n", k, v)
-		}
+	for k, v := range data.GenericFlat {
+		msg += fmt.Sprintf("%s: %s\n", k, v)
 	}
 
 	if data.Sonarr != nil {
@@ -34,7 +32,7 @@ func ReaderToMessage(b io.Reader) (string, error) {
 }
 
 type Data struct {
-	*GenericFlat
+	GenericFlat
 	*Sonarr
 	*GoogleCloud
 }

@@ -35,6 +35,13 @@ func TestParse(t *testing.T) {
 }`,
 			Want: " - Test Title 1x01 now available.",
 		},
+		"simple": {
+			Have: `{"test":"bar","hi":"xyz"}`,
+			Want: `
+test: bar
+hi: xyz
+`,
+		},
 	}
 
 	for name, tc := range tests {
