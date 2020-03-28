@@ -110,6 +110,7 @@ func main() {
 	}...); err != nil {
 		log.WithError(err).Fatal("Failed to register ochttp views")
 	}
+
 	log.Fatal(http.ListenAndServe(":"+port, h))
 }
 
@@ -119,7 +120,7 @@ func messageCreate(s *discordgo.Session, m string) error {
 		return err
 	}
 
-	_, err = s.ChannelMessageSend(chnl, "Pong!")
+	_, err = s.ChannelMessageSend(chnl, m)
 	return err
 }
 
@@ -129,14 +130,17 @@ func fetchPrimaryTextChannelID(sess *discordgo.Session) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	guild, err := sess.Guild(guilds[0].ID)
 	if err != nil {
 		return "", err
 	}
+
 	channels, err := sess.GuildChannels(guild.ID)
 	if err != nil {
 		return "", err
 	}
+
 	for _, channel := range channels {
 		channel, err = sess.Channel(channel.ID)
 		if err != nil {
@@ -151,5 +155,6 @@ func fetchPrimaryTextChannelID(sess *discordgo.Session) (string, error) {
 	if channelid == "" {
 		return "", fmt.Errorf("no primary channel found")
 	}
+
 	return channelid, nil
 }
