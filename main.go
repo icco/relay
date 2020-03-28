@@ -42,7 +42,7 @@ func main() {
 			ProjectID:               "icco-cloud",
 			MonitoredResource:       monitoredresource.Autodetect(),
 			DefaultMonitoringLabels: labels,
-			DefaultTraceAttributes:  map[string]interface{}{"app": "cron"},
+			DefaultTraceAttributes:  map[string]interface{}{"app": "relay"},
 		})
 
 		if err != nil {
@@ -81,13 +81,13 @@ func main() {
 	r.Post("/hook", func(w http.ResponseWriter, r *http.Request) {
 		var message []byte
 		if _, err := io.ReadFull(r.Body, message); err != nil {
-			log.Printf("could not read body: %w", err)
+			log.WithError(err).Error("could not read body")
 			http.Error(w, err.Error(), 500)
 			return
 		}
 
 		if err := messageCreate(dg, string(message)); err != nil {
-			log.Printf("could not send message: %w", err)
+			log.WithError(err).Error("could not send message")
 			http.Error(w, err.Error(), 500)
 			return
 		}
