@@ -63,6 +63,11 @@ func main() {
 	if err != nil {
 		log.WithError(err).Fatal("error creating Discord session")
 	}
+
+	err = dg.Open()
+	if err != nil {
+		log.WithError(err).Fatal("error opening connection,")
+	}
 	defer dg.Close()
 
 	r := chi.NewRouter()
