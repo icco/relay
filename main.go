@@ -11,6 +11,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
@@ -71,6 +72,13 @@ func main() {
 	r.Use(LoggingMiddleware())
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		conns, err := dg.UserConnections()
+		if err != nil {
+			log.WithError(err).Error("could not get connections")
+		} else {
+			log.WithFields(logrus.Fields{"connections": conns}).Debug("user connections")
+		}
+
 		w.Write([]byte("hi."))
 	})
 
