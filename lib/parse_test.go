@@ -37,8 +37,7 @@ func TestParse(t *testing.T) {
 		},
 		"simple": {
 			Have: `{"test":"bar","hi":"xyz"}`,
-			Want: `
-test: bar
+			Want: `test: bar
 hi: xyz
 `,
 		},

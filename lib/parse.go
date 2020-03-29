@@ -4,17 +4,20 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 )
 
 func ReaderToMessage(b io.Reader) (string, error) {
 	var data Data
-	if err := json.NewDecoder(b).Decode(&data); err != nil {
-		return "", fmt.Errorf("decoding json: %w", err)
+	var msg string
+
+	buf, err := ioutil.ReadAll(b)
+	if err != nil {
+		return "", err
 	}
 
-	msg := ""
-	for k, v := range data.GenericFlat {
-		msg += fmt.Sprintf("%s: %s\n", k, v)
+	if err := json.Unmarshal(buf, &data); err != nil {
+		return "", fmt.Errorf("decoding json: %w", err)
 	}
 
 	if data.Sonarr != nil {
@@ -28,16 +31,24 @@ func ReaderToMessage(b io.Reader) (string, error) {
 		msg += fmt.Sprintf("GCP Alert - %q", i.Summary)
 	}
 
+	if msg == "" {
+		var f map[string]string
+		if err := json.Unmarshal(buf, &f); err != nil {
+			return "", fmt.Errorf("decoding json: %w", err)
+		}
+
+		for k, v := range f {
+			msg += fmt.Sprintf("%s: %s\n", k, v)
+		}
+	}
+
 	return msg, nil
 }
 
 type Data struct {
-	GenericFlat
 	*Sonarr
 	*GoogleCloud
 }
-
-type GenericFlat map[string]string
 
 // Sonarr is the structure of messages we get from Sonarr.
 //
