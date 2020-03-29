@@ -33,7 +33,7 @@ func TestParse(t *testing.T) {
     "tvdbId": 1234
   }
 }`,
-			Want: "Sonarr: Test Title 1x01 - \"\".",
+			Want: "Sonarr: Test Title 1x01 - \"Test\".",
 		},
 		"simple": {
 			Have: `{"test":"bar","hi":"xyz"}`,
@@ -58,7 +58,7 @@ hi: xyz
     "mbId": "aaaaa-aaa-aaaa-aaaaaa"
   }
 }`,
-			Want: `Lidarr: Test Name - "Test title" - "".`,
+			Want: `Lidarr: Test Name - "Test title" - "Test".`,
 		},
 	}
 

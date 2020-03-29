@@ -20,6 +20,7 @@ func ReaderToMessage(b io.Reader) (string, error) {
 	if err := json.Unmarshal(buf, &data); err != nil {
 		return "", fmt.Errorf("decoding json to structured data: %w", err)
 	}
+	log.WithField("data", data).Debug("data decoded")
 
 	if data.Sonarr != nil {
 		for _, ep := range data.Sonarr.Episodes {
@@ -29,11 +30,7 @@ func ReaderToMessage(b io.Reader) (string, error) {
 
 	if data.Lidarr != nil {
 		for _, ep := range data.Lidarr.Albums {
-			if data.Lidarr.EventType == "" {
-				msg += fmt.Sprintf("Lidarr: Grabbing %s - %q.", data.Lidarr.Artist.Name, ep.Title)
-			} else {
-				msg += fmt.Sprintf("Lidarr: %s - %q - %s", data.Lidarr.Artist.Name, ep.Title, data.Lidarr.EventType)
-			}
+			msg += fmt.Sprintf("Lidarr: %s - %q - %s", data.Lidarr.Artist.Name, ep.Title, data.Lidarr.EventType)
 		}
 	}
 
