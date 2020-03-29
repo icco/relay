@@ -33,13 +33,32 @@ func TestParse(t *testing.T) {
     "tvdbId": 1234
   }
 }`,
-			Want: " - Test Title 1x01 now available.",
+			Want: "Sonarr: Test Title 1x01 - \"\".",
 		},
 		"simple": {
 			Have: `{"test":"bar","hi":"xyz"}`,
 			Want: `test: bar
 hi: xyz
 `,
+		},
+		"lidarr": {
+			Have: `{
+  "albums": [
+    {
+      "id": 123,
+      "title": "Test title",
+      "qualityVersion": 0
+    }
+  ],
+  "eventType": "Test",
+  "artist": {
+    "id": 1,
+    "name": "Test Name",
+    "path": "C:\\testpath",
+    "mbId": "aaaaa-aaa-aaaa-aaaaaa"
+  }
+}`,
+			Want: `Lidarr: Test Name - "Test title" - "".`,
 		},
 	}
 
