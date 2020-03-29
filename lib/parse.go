@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 )
 
+// ReaderToMessage takes in a message buffer and returns a message string.
 func ReaderToMessage(b io.Reader) (string, error) {
 	var data Data
 	var msg string
@@ -45,6 +46,7 @@ func ReaderToMessage(b io.Reader) (string, error) {
 	return msg, nil
 }
 
+// Data is all the types of structured data we can decode.
 type Data struct {
 	*Sonarr
 	*GoogleCloud
