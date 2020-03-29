@@ -18,12 +18,12 @@ func ReaderToMessage(b io.Reader) (string, error) {
 	}
 
 	if err := json.Unmarshal(buf, &data); err != nil {
-		return "", fmt.Errorf("decoding json: %w", err)
+		return "", fmt.Errorf("decoding json to structured data: %w", err)
 	}
 
 	if data.Sonarr != nil {
 		for _, ep := range data.Sonarr.Episodes {
-			msg += fmt.Sprintf(" - %s %dx%02d now available.", data.Sonarr.Series.Title, ep.SeasonNumber, ep.EpisodeNumber)
+			msg += fmt.Sprintf("Sonarr: %s %dx%02d - %q.", data.Sonarr.Series.Title, ep.SeasonNumber, ep.EpisodeNumber, data.EventType)
 		}
 	}
 
@@ -35,7 +35,7 @@ func ReaderToMessage(b io.Reader) (string, error) {
 	if msg == "" {
 		var f map[string]string
 		if err := json.Unmarshal(buf, &f); err != nil {
-			return "", fmt.Errorf("decoding json: %w", err)
+			return "", fmt.Errorf("decoding json to map: %w", err)
 		}
 
 		for k, v := range f {
