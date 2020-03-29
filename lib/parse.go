@@ -29,7 +29,11 @@ func ReaderToMessage(b io.Reader) (string, error) {
 
 	if data.Lidarr != nil {
 		for _, ep := range data.Lidarr.Albums {
-			msg += fmt.Sprintf("Lidarr: %s - %q - %q.", data.Lidarr.Artist.Name, ep.Title, data.Lidarr.EventType)
+			if data.Lidarr.EventType == "" {
+				msg += fmt.Sprintf("Lidarr: Grabbing %s - %q.", data.Lidarr.Artist.Name, ep.Title)
+			} else {
+				msg += fmt.Sprintf("Lidarr: %s - %q - %s", data.Lidarr.Artist.Name, ep.Title, data.Lidarr.EventType)
+			}
 		}
 	}
 
