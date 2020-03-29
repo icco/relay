@@ -1,6 +1,6 @@
 # relay
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/icco/relay)](https://goreportcard.com/report/github.com/icco/relay)
+[![Go Report Card](https://goreportcard.com/badge/github.com/icco/relay)](https://goreportcard.com/report/github.com/icco/relay) [![GoDoc](https://godoc.org/github.com/icco/relay?status.svg)](https://godoc.org/github.com/icco/relay)
 
 A service that runs as a discord bot and proxies web requests to it.
 
