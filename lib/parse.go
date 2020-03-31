@@ -24,13 +24,13 @@ func ReaderToMessage(b io.Reader) (string, error) {
 
 	if data.Sonarr != nil {
 		for _, ep := range data.Sonarr.Episodes {
-			msg += fmt.Sprintf("Sonarr: %s %dx%02d - %q.", data.Sonarr.Series.Title, ep.SeasonNumber, ep.EpisodeNumber, data.Sonarr.EventType)
+			msg += fmt.Sprintf("Sonarr: %s %dx%02d - %q.", data.Sonarr.Series.Title, ep.SeasonNumber, ep.EpisodeNumber, *data.EventType)
 		}
 	}
 
 	if data.Lidarr != nil {
 		for _, ep := range data.Lidarr.Albums {
-			msg += fmt.Sprintf("Lidarr: %s - %q - %s", data.Lidarr.Artist.Name, ep.Title, data.Lidarr.EventType)
+			msg += fmt.Sprintf("Lidarr: %s - %q - %s", data.Lidarr.Artist.Name, ep.Title, *data.EventType)
 		}
 	}
 
@@ -58,6 +58,7 @@ type Data struct {
 	*GoogleCloud
 	*Lidarr
 	*Sonarr
+	EventType *string `json:"eventType"`
 }
 
 // Sonarr is the structure of messages we get from Sonarr.
@@ -71,8 +72,7 @@ type Sonarr struct {
 		Title          string `json:"title"`
 		QualityVersion int    `json:"qualityVersion"`
 	} `json:"episodes"`
-	EventType string `json:"eventType"`
-	Series    struct {
+	Series struct {
 		ID     int    `json:"id"`
 		Title  string `json:"title"`
 		Path   string `json:"path"`
@@ -138,8 +138,7 @@ type Lidarr struct {
 		Title          string `json:"title"`
 		QualityVersion int    `json:"qualityVersion"`
 	} `json:"albums"`
-	EventType string `json:"eventType"`
-	Artist    struct {
+	Artist struct {
 		ID   int    `json:"id"`
 		Name string `json:"name"`
 		Path string `json:"path"`

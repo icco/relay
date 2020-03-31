@@ -58,7 +58,7 @@ hi: xyz
     "mbId": "aaaaa-aaa-aaaa-aaaaaa"
   }
 }`,
-			Want: `Lidarr: Test Name - "Test title" - "Test".`,
+			Want: `Lidarr: Test Name - "Test title" - Test`,
 		},
 	}
 
