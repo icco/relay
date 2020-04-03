@@ -24,19 +24,19 @@ func ReaderToMessage(b io.Reader) (string, error) {
 
 	if data.Sonarr != nil {
 		for _, ep := range data.Sonarr.Episodes {
-			msg += fmt.Sprintf("Sonarr: %s %dx%02d - %q.", data.Sonarr.Series.Title, ep.SeasonNumber, ep.EpisodeNumber, *data.EventType)
+			msg += fmt.Sprintf("Sonarr: %s %dx%02d - %q\n", data.Sonarr.Series.Title, ep.SeasonNumber, ep.EpisodeNumber, *data.EventType)
 		}
 	}
 
 	if data.Lidarr != nil {
 		for _, ep := range data.Lidarr.Albums {
-			msg += fmt.Sprintf("Lidarr: %s - %q - %s", data.Lidarr.Artist.Name, ep.Title, *data.EventType)
+			msg += fmt.Sprintf("Lidarr: %s - %q - %s\n", data.Lidarr.Artist.Name, ep.Title, *data.EventType)
 		}
 	}
 
 	if data.GoogleCloud != nil {
 		i := data.GoogleCloud.Incident
-		msg += fmt.Sprintf("GCP Alert - %q", i.Summary)
+		msg += fmt.Sprintf("GCP Alert - %q\n", i.Summary)
 	}
 
 	if msg == "" {
