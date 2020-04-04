@@ -57,9 +57,9 @@ func TestParse(t *testing.T) {
 }`,
 			Want: "Lidarr: Test Name - \"Test title\" - Test\n",
 		},
-		"plex": {
+		"plex TV Episode": {
 			Have: `{"event":"media.resume","user":true,"owner":true,"Account":{"id":1,"thumb":"https://plex.tv/users/b921c1a7580bf543/avatar?c=1575240953","title":"icco"},"Server":{"title":"storm","uuid":"544b62f0b4f85d5d8f2c91696763d13578f5264a"},"Player":{"local":true,"publicAddress":"68.194.92.253","title":"BRAVIA 4K GB","uuid":"fb39bc1decfcc7a4-com-plexapp-android"},"Metadata":{"librarySectionType":"show","ratingKey":"56914","key":"/library/metadata/56914","parentRatingKey":"56851","grandparentRatingKey":"56850","guid":"com.plexapp.agents.thetvdb://301376/1/14?lang=en","parentGuid":"com.plexapp.agents.thetvdb://301376/1?lang=en","grandparentGuid":"com.plexapp.agents.thetvdb://301376?lang=en","type":"episode","title":"If You Can't Scooby-Doo the Time, Don't Scooby-Doo the Crime","grandparentTitle":"Be Cool, Scooby-Doo!","parentTitle":"Season 1","contentRating":"TV-G","summary":"Fred visits a high security prison and ends up investigating the ghost of an escaped inmate who's wreaking havoc on it.","index":14,"parentIndex":1,"rating":10.0,"lastViewedAt":1585962956,"year":2015,"thumb":"/library/metadata/56914/thumb/1585369990","art":"/library/metadata/56850/art/1585369991","parentThumb":"/library/metadata/56851/thumb/1585369991","grandparentThumb":"/library/metadata/56850/thumb/1585369991","grandparentArt":"/library/metadata/56850/art/1585369991","grandparentTheme":"/library/metadata/56850/theme/1585369991","originallyAvailableAt":"2015-10-31","addedAt":1585287583,"updatedAt":1585369990}}`,
-			Want: "",
+			Want: "Plex - \"media.resume\" : Be Cool, Scooby-Doo! 1x14\n",
 		},
 	}
 
