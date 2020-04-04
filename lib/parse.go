@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"sort"
 )
 
 // ReaderToMessage takes in a message buffer and returns a message string.
@@ -45,8 +46,13 @@ func ReaderToMessage(b io.Reader) (string, error) {
 			return "", fmt.Errorf("decoding json to map: %w", err)
 		}
 
-		for k, v := range f {
-			msg += fmt.Sprintf("%s: %s\n", k, v)
+		var keys []string
+		for k := range f {
+			keys = append(keys, k)
+		}
+		sort.Strings(keys)
+		for _, k := range keys {
+			msg += fmt.Sprintf("%s: %s\n", k, f[k])
 		}
 	}
 
