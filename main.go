@@ -88,6 +88,15 @@ func main() {
 	})
 
 	r.Post("/hook", func(w http.ResponseWriter, r *http.Request) {
+		if err := r.ParseForm(); err != nil {
+			log.WithError(err).Error("could not parse form")
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		ct := r.Header.Get("content-type")
+		log.Infof("got content-type %q", ct)
+
 		buf, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			log.WithError(err).Error("could not read body")
@@ -95,13 +104,9 @@ func main() {
 			return
 		}
 
-		rdr1 := bytes.NewBuffer(buf)
-		rdr2 := ioutil.NopCloser(bytes.NewBuffer(buf))
-		r.Body = rdr2
-
-		msg, err := lib.ReaderToMessage(r.Body)
+		msg, err := lib.BufferToMessage(buf)
 		if err != nil {
-			log.WithError(err).WithField("body", rdr1.String()).Error("could not decode body")
+			log.WithError(err).WithField("body", buf).Error("could not decode body")
 			http.Error(w, err.Error(), 500)
 			return
 		}

@@ -3,20 +3,13 @@ package lib
 import (
 	"encoding/json"
 	"fmt"
-	"io"
-	"io/ioutil"
 	"sort"
 )
 
-// ReaderToMessage takes in a message buffer and returns a message string.
-func ReaderToMessage(b io.Reader) (string, error) {
+// BufferToMessage takes in a message buffer and returns a message string.
+func BufferToMessage(buf []byte) (string, error) {
 	var data Data
 	var msg string
-
-	buf, err := ioutil.ReadAll(b)
-	if err != nil {
-		return "", err
-	}
 
 	if err := json.Unmarshal(buf, &data); err != nil {
 		return "", fmt.Errorf("decoding json to structured data: %w", err)

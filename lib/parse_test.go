@@ -1,7 +1,6 @@
 package lib
 
 import (
-	"strings"
 	"testing"
 )
 
@@ -72,13 +71,13 @@ Content-Type: application/json
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			got, err := ReaderToMessage(strings.NewReader(tc.Have))
+			got, err := BufferToMessage([]byte(tc.Have))
 			if err != nil {
 				t.Error(err)
 			}
 
 			if got != tc.Want {
-				t.Errorf("ReaderToMessage(%q) returned %q wanted %q", tc.Have, got, tc.Want)
+				t.Errorf("BufferToMessage(%q) returned %q wanted %q", tc.Have, got, tc.Want)
 			}
 		})
 	}
