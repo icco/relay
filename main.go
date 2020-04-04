@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 
 	"contrib.go.opencensus.io/exporter/stackdriver"
 	"contrib.go.opencensus.io/exporter/stackdriver/monitoredresource"
@@ -87,12 +88,6 @@ func main() {
 	})
 
 	r.Post("/hook", func(w http.ResponseWriter, r *http.Request) {
-		if err := r.ParseForm(); err != nil {
-			log.WithError(err).Error("could not parse form")
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
 		ct := r.Header.Get("content-type")
 		log.Infof("got content-type %q", ct)
 
@@ -103,11 +98,28 @@ func main() {
 			return
 		}
 
-		msg, err := lib.BufferToMessage(buf)
-		if err != nil {
-			log.WithError(err).WithField("body", buf).Error("could not decode body")
-			http.Error(w, err.Error(), 500)
-			return
+		var msg string
+		switch ct {
+		case "application/json":
+			msg, err = lib.BufferToMessage(buf)
+			if err != nil {
+				log.WithError(err).WithField("body", string(buf)).Error("could not decode body")
+				http.Error(w, err.Error(), 500)
+				return
+			}
+		case "plain/text":
+			msg = string(buf)
+		default:
+			parts := strings.Split(";", ct)
+			if len(parts) >= 1 && parts[0] == "multipart/form-data" {
+				val := r.FormValue("payload")
+				msg, err = lib.BufferToMessage([]byte(val))
+				if err != nil {
+					log.WithError(err).WithField("body", string(buf)).Error("could not decode body")
+					http.Error(w, err.Error(), 500)
+					return
+				}
+			}
 		}
 
 		if err := messageCreate(dg, msg); err != nil {
