@@ -84,6 +84,7 @@ func jsonToSonarr(buf []byte) *Sonarr {
 	return &data
 }
 
+// Message returns a string representation of this object for human consumption.
 func (j *Sonarr) Message() string {
 	var msg string
 	for _, ep := range j.Episodes {
@@ -93,6 +94,7 @@ func (j *Sonarr) Message() string {
 	return msg
 }
 
+// Valid checks that the data is good.
 func (j *Sonarr) Valid() bool {
 	return j.EventType != "" && len(j.Episodes) > 0
 }
@@ -157,10 +159,12 @@ func jsonToGoogleCloud(buf []byte) *GoogleCloud {
 	return &data
 }
 
+// Message returns a string representation of this object for human consumption.
 func (j *GoogleCloud) Message() string {
 	return fmt.Sprintf("GCP Alert - %q\n", j.Incident.Summary)
 }
 
+// Valid checks that the data is good.
 func (j *GoogleCloud) Valid() bool {
 	return j.Incident.IncidentID != ""
 }
@@ -194,6 +198,7 @@ func jsonToLidarr(buf []byte) *Lidarr {
 	return &data
 }
 
+// Message returns a string representation of this object for human consumption.
 func (j *Lidarr) Message() string {
 	var msg string
 	for _, ep := range j.Albums {
@@ -202,6 +207,7 @@ func (j *Lidarr) Message() string {
 	return msg
 }
 
+// Valid checks that the data is good.
 func (j *Lidarr) Valid() bool {
 	return j.EventType != "" && len(j.Albums) > 0
 }
@@ -272,10 +278,12 @@ func jsonToPlex(buf []byte) *Plex {
 	return &data
 }
 
+// Message returns a string representation of this object for human consumption.
 func (j *Plex) Message() string {
 	return fmt.Sprintf("Plex - %q : %s %dx%d\n", j.Event, j.Metadata.GrandparentTitle, j.Metadata.ParentIndex, j.Metadata.Index)
 }
 
+// Valid checks that the data is good.
 func (j *Plex) Valid() bool {
 	return j.Event != ""
 }
