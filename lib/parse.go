@@ -9,31 +9,33 @@ import (
 // BufferToMessage takes in a message buffer and returns a message string.
 func BufferToMessage(buf []byte) (string, error) {
 	var msg string
-	var parsed interface{}
-	if err := json.Unmarshal(buf, &parsed); err != nil {
-		log.WithError(err).Error("decoding json error")
-		return "", fmt.Errorf("decoding json to structured data: %w", err)
-	}
 
-	switch parsed.(type) {
-	case Sonarr:
-		data := parsed.(Sonarr)
+	if data := jsonToSonarr(buf); data != nil {
 		for _, ep := range data.Episodes {
 			msg += fmt.Sprintf("Sonarr: %s %dx%02d - %q\n", data.Series.Title, ep.SeasonNumber, ep.EpisodeNumber, *data.EventType)
 		}
-	case Lidarr:
-		data := parsed.(Lidarr)
+	}
+
+	if data := jsonToLidarr(buf); data != nil {
 		for _, ep := range data.Albums {
 			msg += fmt.Sprintf("Lidarr: %s - %q - %s\n", data.Artist.Name, ep.Title, *data.EventType)
 		}
-	case GoogleCloud:
-		data := parsed.(GoogleCloud)
-		msg += fmt.Sprintf("GCP Alert - %q\n", data.Incident.Summary)
-	case Plex:
-		data := parsed.(Plex)
+	}
+
+	if data := jsonToGoogleCloud(buf); data != nil {
+		i := data.Incident
+		msg += fmt.Sprintf("GCP Alert - %q\n", i.Summary)
+	}
+
+	if data := jsonToPlex(buf); data != nil {
 		msg += fmt.Sprintf("Plex - %q : %s %dx%d\n", data.Event, data.Metadata.GrandparentTitle, data.Metadata.ParentIndex, data.Metadata.Index)
-	case map[string]string:
-		f := parsed.(map[string]string)
+	}
+
+	if msg == "" {
+		var f map[string]string
+		if err := json.Unmarshal(buf, &f); err != nil {
+			return "", fmt.Errorf("decoding json to map: %w", err)
+		}
 
 		var keys []string
 		for k := range f {
@@ -43,8 +45,6 @@ func BufferToMessage(buf []byte) (string, error) {
 		for _, k := range keys {
 			msg += fmt.Sprintf("%s: %s\n", k, f[k])
 		}
-	default:
-		return "", fmt.Errorf("don't know how to parse")
 	}
 
 	return msg, nil
