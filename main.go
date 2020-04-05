@@ -113,6 +113,7 @@ func main() {
 			parts := strings.Split(";", ct)
 			if len(parts) >= 1 && parts[0] == "multipart/form-data" {
 				val := r.FormValue("payload")
+				log.WithField("payload", val).Debug("attempting form parse")
 				msg, err = lib.BufferToMessage([]byte(val))
 				if err != nil {
 					log.WithError(err).WithField("body", string(buf)).Error("could not decode body")
@@ -124,7 +125,7 @@ func main() {
 
 		// Generates a 200, but log an error, because this shouldn't happen.
 		if msg == "" {
-			log.WithField("body", buf).Error("empty message generated")
+			log.WithField("body", string(buf)).Error("empty message generated")
 			w.Write([]byte(""))
 			return
 		}
