@@ -122,6 +122,13 @@ func main() {
 			}
 		}
 
+		// Generates a 200, but log an error, because this shouldn't happen.
+		if msg == "" {
+			log.WithField("body", buf).Error("empty message generated")
+			w.Write([]byte(""))
+			return
+		}
+
 		if err := messageCreate(dg, msg); err != nil {
 			log.WithError(err).Error("could not send message")
 			http.Error(w, err.Error(), 500)
