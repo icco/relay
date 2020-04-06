@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -92,20 +93,16 @@ func main() {
 		ct := r.Header.Get("content-type")
 		log.Infof("got content-type %q", ct)
 
-		b, err := r.GetBody()
-		if err != nil {
-			log.WithError(err).Error("could not read body")
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		buf, err := ioutil.ReadAll(b)
-		defer b.Close()
+		buf, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			log.WithError(err).Error("could not read buffer")
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		rdr2 := ioutil.NopCloser(bytes.NewBuffer(buf))
+		r.Body = rdr2
+		defer r.Body.Close()
 
 		var msg string
 		switch ct {
