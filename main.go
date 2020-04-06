@@ -92,9 +92,17 @@ func main() {
 		ct := r.Header.Get("content-type")
 		log.Infof("got content-type %q", ct)
 
-		buf, err := ioutil.ReadAll(r.Body)
+		b, err := r.GetBody()
 		if err != nil {
 			log.WithError(err).Error("could not read body")
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		buf, err := ioutil.ReadAll(b)
+		defer b.Close()
+		if err != nil {
+			log.WithError(err).Error("could not read buffer")
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
