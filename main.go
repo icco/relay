@@ -10,6 +10,7 @@ import (
 	"contrib.go.opencensus.io/exporter/stackdriver"
 	"contrib.go.opencensus.io/exporter/stackdriver/monitoredresource"
 	"contrib.go.opencensus.io/exporter/stackdriver/propagation"
+	"github.com/alecthomas/units"
 	"github.com/bwmarrin/discordgo"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -110,6 +111,12 @@ func main() {
 		case "plain/text":
 			msg = string(buf)
 		default:
+			err := r.ParseMultipartForm(int64(20 * units.Megabyte))
+			if err != nil {
+				log.WithError(err).WithField("body", string(buf)).Error("could not parse form")
+				http.Error(w, err.Error(), 500)
+				return
+			}
 			parts := strings.Split(";", ct)
 			if len(parts) >= 1 && parts[0] == "multipart/form-data" {
 				val := r.FormValue("payload")

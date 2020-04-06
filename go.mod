@@ -5,6 +5,7 @@ go 1.14
 require (
 	cloud.google.com/go v0.56.0 // indirect
 	contrib.go.opencensus.io/exporter/stackdriver v0.13.1
+	github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf
 	github.com/aws/aws-sdk-go v1.30.4 // indirect
 	github.com/bwmarrin/discordgo v0.20.2
 	github.com/felixge/httpsnoop v1.0.1
