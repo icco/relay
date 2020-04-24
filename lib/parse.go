@@ -188,13 +188,57 @@ type GoogleCloudBuild struct {
 	Subscription string `json:"subscription"`
 }
 
+type gcbBuildResource struct {
+	ID        string `json:"id"`
+	ProjectID string `json:"projectId"`
+	Status    string `json:"status"`
+	Source    struct {
+		StorageSource struct {
+			Bucket string `json:"bucket"`
+			Object string `json:"object"`
+		} `json:"storageSource"`
+	} `json:"source"`
+	Steps []struct {
+		Name string   `json:"name"`
+		Args []string `json:"args"`
+	} `json:"steps"`
+	CreateTime time.Time `json:"createTime"`
+	Timeout    string    `json:"timeout"`
+	Images     []string  `json:"images"`
+	Artifacts  struct {
+		Images []string `json:"images"`
+	} `json:"artifacts"`
+	LogsBucket       string `json:"logsBucket"`
+	SourceProvenance struct {
+		ResolvedStorageSource struct {
+			Bucket     string `json:"bucket"`
+			Object     string `json:"object"`
+			Generation string `json:"generation"`
+		} `json:"resolvedStorageSource"`
+	} `json:"sourceProvenance"`
+	BuildTriggerID string `json:"buildTriggerId"`
+	Options        struct {
+		SubstitutionOption string `json:"substitutionOption"`
+		Logging            string `json:"logging"`
+	} `json:"options"`
+	LogURL        string `json:"logUrl"`
+	Substitutions struct {
+		BRANCHNAME string `json:"BRANCH_NAME"`
+		COMMITSHA  string `json:"COMMIT_SHA"`
+		REPONAME   string `json:"REPO_NAME"`
+		REVISIONID string `json:"REVISION_ID"`
+		SHORTSHA   string `json:"SHORT_SHA"`
+	} `json:"substitutions"`
+	Tags []string `json:"tags"`
+}
+
 func jsonToGoogleCloudBuild(buf []byte) DataType {
 	var data GoogleCloudBuild
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.WithError(err).Error("decoding json to GoogleCloud")
+		log.WithError(err).Error("decoding json to GoogleCloudBuild")
 		return nil
 	}
-	log.WithField("data", data).Debug("GoogleCloud data decoded")
+	log.WithField("data", data).Debug("GoogleCloudBuild data decoded")
 
 	return &data
 }
@@ -206,8 +250,13 @@ func (j *GoogleCloudBuild) Message() string {
 		log.WithError(err).WithField("data", j.Msg.Data).Error("could not decode base64 data")
 		return ""
 	}
+	var sub gcbBuildResource
+	if err := json.Unmarshal(data, &sub); err != nil {
+		log.WithError(err).Error("decoding json to GoogleCloudBuild Sub")
+		return ""
+	}
 
-	return fmt.Sprintf("Google Cloud Build %+v - %q", j.Msg.Attributes, data)
+	return fmt.Sprintf("Google Cloud Build (%s) - %+v @ %s", sub.Status, sub.Artifacts, sub.LogURL)
 }
 
 // Valid checks that the data is good.
