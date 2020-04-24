@@ -76,7 +76,7 @@ type Sonarr struct {
 	} `json:"series"`
 }
 
-func jsonToSonarr(buf []byte) *Sonarr {
+func jsonToSonarr(buf []byte) DataType {
 	var data Sonarr
 	if err := json.Unmarshal(buf, &data); err != nil {
 		log.WithError(err).Error("decoding json to Sonarr")
@@ -151,7 +151,7 @@ type GoogleCloud struct {
 	Version string `json:"version"`
 }
 
-func jsonToGoogleCloud(buf []byte) *GoogleCloud {
+func jsonToGoogleCloud(buf []byte) DataType {
 	var data GoogleCloud
 	if err := json.Unmarshal(buf, &data); err != nil {
 		log.WithError(err).Error("decoding json to GoogleCloud")
@@ -188,7 +188,7 @@ type GoogleCloudBuild struct {
 	Subscription string `json:"subscription"`
 }
 
-func jsonToGoogleCloudBuild(buf []byte) *GoogleCloudBuild {
+func jsonToGoogleCloudBuild(buf []byte) DataType {
 	var data GoogleCloudBuild
 	if err := json.Unmarshal(buf, &data); err != nil {
 		log.WithError(err).Error("decoding json to GoogleCloud")
@@ -233,7 +233,7 @@ type Lidarr struct {
 	} `json:"artist"`
 }
 
-func jsonToLidarr(buf []byte) *Lidarr {
+func jsonToLidarr(buf []byte) DataType {
 	var data Lidarr
 	if err := json.Unmarshal(buf, &data); err != nil {
 		log.WithError(err).Error("decoding json to Lidarr")
@@ -313,7 +313,7 @@ type Plex struct {
 	} `json:"Metadata"`
 }
 
-func jsonToPlex(buf []byte) *Plex {
+func jsonToPlex(buf []byte) DataType {
 	var data Plex
 	if err := json.Unmarshal(buf, &data); err != nil {
 		log.WithError(err).Error("decoding json to Plex")
