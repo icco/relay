@@ -8,37 +8,32 @@ import (
 	"time"
 )
 
+var (
+	funcs = []DataParseFunc{
+		jsonToSonarr,
+		jsonToLidarr,
+		jsonToGoogleCloud,
+		jsonToGoogleCloudBuild,
+		jsonToPlex,
+	}
+)
+
+type DataParseFunc func([]byte) DataType
+
+type DataType interface {
+	Valid() bool
+	Message() string
+}
+
 // BufferToMessage takes in a message buffer and returns a message string.
 func BufferToMessage(buf []byte) (string, error) {
 	var msg string
 
-	if data := jsonToSonarr(buf); data != nil {
-		if data.Valid() {
-			msg += data.Message()
-		}
-	}
-
-	if data := jsonToLidarr(buf); data != nil {
-		if data.Valid() {
-			msg += data.Message()
-		}
-	}
-
-	if data := jsonToGoogleCloud(buf); data != nil {
-		if data.Valid() {
-			msg += data.Message()
-		}
-	}
-
-	if data := jsonToGoogleCloud(buf); data != nil {
-		if data.Valid() {
-			msg += data.Message()
-		}
-	}
-
-	if data := jsonToPlex(buf); data != nil {
-		if data.Valid() {
-			msg += data.Message()
+	for _, f := range funcs {
+		if data := f(buf); data != nil {
+			if data.Valid() {
+				msg += data.Message()
+			}
 		}
 	}
 
@@ -191,6 +186,17 @@ type GoogleCloudBuild struct {
 		PublishTime time.Time `json:"publish_time"`
 	} `json:"message"`
 	Subscription string `json:"subscription"`
+}
+
+func jsonToGoogleCloudBuild(buf []byte) *GoogleCloudBuild {
+	var data GoogleCloudBuild
+	if err := json.Unmarshal(buf, &data); err != nil {
+		log.WithError(err).Error("decoding json to GoogleCloud")
+		return nil
+	}
+	log.WithField("data", data).Debug("GoogleCloud data decoded")
+
+	return &data
 }
 
 // Message returns a string representation of this object for human consumption.
