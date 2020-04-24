@@ -273,7 +273,7 @@ func jsonToPlex(buf []byte) *Plex {
 		log.WithError(err).Error("decoding json to Plex")
 		return nil
 	}
-	log.WithField("data", data).Info("Plex data decoded")
+	log.WithField("data", data).Debug("Plex data decoded")
 
 	return &data
 }

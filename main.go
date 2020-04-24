@@ -91,7 +91,7 @@ func main() {
 
 	r.Post("/hook", func(w http.ResponseWriter, r *http.Request) {
 		ct := r.Header.Get("content-type")
-		log.WithField("content-type", ct).Infof("got content-type")
+		log.WithField("content-type", ct).Debug("got content-type")
 
 		buf, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -123,7 +123,7 @@ func main() {
 				return
 			}
 			parts := strings.Split(ct, ";")
-			log.WithField("parts", parts).Info("parsing form")
+			log.WithField("parts", parts).Debug("parsing form")
 			if len(parts) >= 1 && parts[0] == "multipart/form-data" {
 				val := r.FormValue("payload")
 				log.WithField("payload", val).Debug("attempting form parse")
