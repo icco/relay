@@ -18,8 +18,10 @@ var (
 	}
 )
 
+// DataParseFunc is the generic func type for parsing input.
 type DataParseFunc func([]byte) DataType
 
+// DataType is the interface all parsed data must match.
 type DataType interface {
 	Valid() bool
 	Message() string
