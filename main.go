@@ -122,7 +122,7 @@ func main() {
 				http.Error(w, err.Error(), 500)
 				return
 			}
-			parts := strings.Split(";", ct)
+			parts := strings.Split(ct, ";")
 			log.WithField("parts", parts).Info("parsing form")
 			if len(parts) >= 1 && parts[0] == "multipart/form-data" {
 				val := r.FormValue("payload")
