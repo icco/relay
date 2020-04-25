@@ -31,6 +31,7 @@ type DataType interface {
 // BufferToMessage takes in a message buffer and returns a message string.
 func BufferToMessage(buf []byte) (string, error) {
 	var msg string
+	log.WithField("body", string(buf)).Debug("attempting to parse")
 
 	for _, f := range funcs {
 		if data := f(buf); data != nil {
@@ -43,7 +44,8 @@ func BufferToMessage(buf []byte) (string, error) {
 	if msg == "" {
 		var f map[string]string
 		if err := json.Unmarshal(buf, &f); err != nil {
-			return "", fmt.Errorf("decoding json to map: %w", err)
+			log.WithError(err).Info("decoding json to map")
+			return "", nil
 		}
 
 		var keys []string
