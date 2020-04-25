@@ -29,7 +29,7 @@ type DataType interface {
 }
 
 // BufferToMessage takes in a message buffer and returns a message string.
-func BufferToMessage(buf []byte) (string, error) {
+func BufferToMessage(buf []byte) string {
 	var msg string
 	log.WithField("body", string(buf)).Debug("attempting to parse")
 
@@ -45,7 +45,7 @@ func BufferToMessage(buf []byte) (string, error) {
 		var f map[string]string
 		if err := json.Unmarshal(buf, &f); err != nil {
 			log.WithError(err).Info("decoding json to map")
-			return "", nil
+			return ""
 		}
 
 		var keys []string
@@ -58,7 +58,7 @@ func BufferToMessage(buf []byte) (string, error) {
 		}
 	}
 
-	return msg, nil
+	return msg
 }
 
 // Sonarr is the structure of messages we get from Sonarr.

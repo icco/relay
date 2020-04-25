@@ -107,12 +107,7 @@ func main() {
 		var msg string
 		switch ct {
 		case "application/json":
-			msg, err = lib.BufferToMessage(buf)
-			if err != nil {
-				log.WithError(err).WithField("body", string(buf)).Error("could not decode body")
-				http.Error(w, err.Error(), 500)
-				return
-			}
+			msg = lib.BufferToMessage(buf)
 		case "plain/text":
 			msg = string(buf)
 		default:
@@ -127,12 +122,7 @@ func main() {
 			if len(parts) >= 1 && parts[0] == "multipart/form-data" {
 				val := r.FormValue("payload")
 				log.WithField("payload", val).Debug("attempting form parse")
-				msg, err = lib.BufferToMessage([]byte(val))
-				if err != nil {
-					log.WithError(err).WithField("body", string(buf)).Error("could not decode body")
-					http.Error(w, err.Error(), 500)
-					return
-				}
+				msg = lib.BufferToMessage([]byte(val))
 			}
 		}
 
