@@ -265,10 +265,12 @@ func (j *GoogleCloudBuild) Message() string {
 		return ""
 	}
 
+	target := ""
 	if len(sub.Artifacts.Images) == 1 {
-		return fmt.Sprintf("Google Cloud Build (%s) - %s @ %s", strings.Title(sub.Status), sub.Artifacts.Images[0], sub.LogURL)
+		target = sub.Artifacts.Images[0]
 	}
-	return fmt.Sprintf("Google Cloud Build (%s) - %+v @ %s", strings.Title(sub.Status), sub.Artifacts, sub.LogURL)
+
+	return fmt.Sprintf("Google Cloud Build: %s %s @ %s", strings.Title(sub.Status), target, sub.LogURL)
 }
 
 // Valid checks that the data is good.
@@ -400,7 +402,7 @@ func jsonToPlex(buf []byte) DataType {
 
 // Message returns a string representation of this object for human consumption.
 func (j *Plex) Message() string {
-	return fmt.Sprintf("Plex - %q : %s %dx%d\n", j.Event, j.Metadata.GrandparentTitle, j.Metadata.ParentIndex, j.Metadata.Index)
+	return fmt.Sprintf("Plex: %q - %s %dx%d\n", j.Event, j.Metadata.GrandparentTitle, j.Metadata.ParentIndex, j.Metadata.Index)
 }
 
 // Valid checks that the data is good.
