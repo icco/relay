@@ -73,11 +73,7 @@ func TestParse(t *testing.T) {
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			got, err := BufferToMessage([]byte(tc.Have))
-			if err != nil {
-				t.Error(err)
-			}
-
+			got := BufferToMessage([]byte(tc.Have))
 			if got != tc.Want {
 				t.Errorf("BufferToMessage(%q) returned %q wanted %q", tc.Have, got, tc.Want)
 			}
