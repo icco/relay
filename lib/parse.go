@@ -359,35 +359,84 @@ type Plex struct {
 		UUID          string `json:"uuid"`
 	} `json:"Player"`
 	Metadata struct {
-		LibrarySectionType    string  `json:"librarySectionType"`
-		RatingKey             string  `json:"ratingKey"`
-		Key                   string  `json:"key"`
-		ParentRatingKey       string  `json:"parentRatingKey"`
-		GrandparentRatingKey  string  `json:"grandparentRatingKey"`
-		GUID                  string  `json:"guid"`
-		ParentGUID            string  `json:"parentGuid"`
-		GrandparentGUID       string  `json:"grandparentGuid"`
-		Type                  string  `json:"type"`
-		Title                 string  `json:"title"`
-		GrandparentTitle      string  `json:"grandparentTitle"`
-		ParentTitle           string  `json:"parentTitle"`
-		ContentRating         string  `json:"contentRating"`
-		Summary               string  `json:"summary"`
-		Index                 int     `json:"index"`
-		ParentIndex           int     `json:"parentIndex"`
-		Rating                float64 `json:"rating"`
-		ViewCount             int     `json:"viewCount"`
-		LastViewedAt          int     `json:"lastViewedAt"`
-		Year                  int     `json:"year"`
-		Thumb                 string  `json:"thumb"`
-		Art                   string  `json:"art"`
-		ParentThumb           string  `json:"parentThumb"`
-		GrandparentThumb      string  `json:"grandparentThumb"`
-		GrandparentArt        string  `json:"grandparentArt"`
-		GrandparentTheme      string  `json:"grandparentTheme"`
-		OriginallyAvailableAt string  `json:"originallyAvailableAt"`
 		AddedAt               int     `json:"addedAt"`
+		Art                   string  `json:"art"`
+		AudienceRating        float64 `json:"audienceRating"`
+		AudienceRatingImage   string  `json:"audienceRatingImage"`
+		ChapterSource         string  `json:"chapterSource"`
+		ContentRating         string  `json:"contentRating"`
+		Duration              int     `json:"duration"`
+		GUID                  string  `json:"guid"`
+		GrandparentArt        string  `json:"grandparentArt"`
+		GrandparentGUID       string  `json:"grandparentGuid"`
+		GrandparentRatingKey  string  `json:"grandparentRatingKey"`
+		GrandparentTheme      string  `json:"grandparentTheme"`
+		GrandparentThumb      string  `json:"grandparentThumb"`
+		GrandparentTitle      string  `json:"grandparentTitle"`
+		Index                 int     `json:"index"`
+		Key                   string  `json:"key"`
+		LastViewedAt          int     `json:"lastViewedAt"`
+		LibrarySectionType    string  `json:"librarySectionType"`
+		OriginallyAvailableAt string  `json:"originallyAvailableAt"`
+		ParentGUID            string  `json:"parentGuid"`
+		ParentIndex           int     `json:"parentIndex"`
+		ParentRatingKey       string  `json:"parentRatingKey"`
+		ParentThumb           string  `json:"parentThumb"`
+		ParentTitle           string  `json:"parentTitle"`
+		PrimaryExtraKey       string  `json:"primaryExtraKey"`
+		Rating                float64 `json:"rating"`
+		RatingImage           string  `json:"ratingImage"`
+		RatingKey             string  `json:"ratingKey"`
+		Studio                string  `json:"studio"`
+		Summary               string  `json:"summary"`
+		Tagline               string  `json:"tagline"`
+		Thumb                 string  `json:"thumb"`
+		Title                 string  `json:"title"`
+		Type                  string  `json:"type"`
 		UpdatedAt             int     `json:"updatedAt"`
+		ViewCount             int     `json:"viewCount"`
+		Year                  int     `json:"year"`
+		Genre                 []struct {
+			ID    int    `json:"id"`
+			Tag   string `json:"tag"`
+			Count int    `json:"count"`
+		} `json:"Genre"`
+		Director []struct {
+			ID    int    `json:"id"`
+			Tag   string `json:"tag"`
+			Count int    `json:"count"`
+		} `json:"Director"`
+		Writer []struct {
+			ID    int    `json:"id"`
+			Tag   string `json:"tag"`
+			Count int    `json:"count"`
+		} `json:"Writer"`
+		Producer []struct {
+			ID    int    `json:"id"`
+			Tag   string `json:"tag"`
+			Count int    `json:"count"`
+		} `json:"Producer"`
+		Country []struct {
+			ID    int    `json:"id"`
+			Tag   string `json:"tag"`
+			Count int    `json:"count"`
+		} `json:"Country"`
+		Collection []struct {
+			ID  int    `json:"id"`
+			Tag string `json:"tag"`
+		} `json:"Collection"`
+		Role []struct {
+			ID    int    `json:"id"`
+			Tag   string `json:"tag"`
+			Count int    `json:"count,omitempty"`
+			Role  string `json:"role"`
+			Thumb string `json:"thumb,omitempty"`
+		} `json:"Role"`
+		Similar []struct {
+			ID    int    `json:"id"`
+			Tag   string `json:"tag"`
+			Count int    `json:"count"`
+		} `json:"Similar"`
 	} `json:"Metadata"`
 }
 
@@ -404,7 +453,14 @@ func jsonToPlex(buf []byte) DataType {
 
 // Message returns a string representation of this object for human consumption.
 func (j *Plex) Message() string {
-	return fmt.Sprintf("Plex: %q - %s %dx%d\n", j.Event, j.Metadata.GrandparentTitle, j.Metadata.ParentIndex, j.Metadata.Index)
+	switch j.Metadata.Type {
+	case "episode":
+		return fmt.Sprintf("Plex: %q - %s %dx%d\n", j.Event, j.Metadata.GrandparentTitle, j.Metadata.ParentIndex, j.Metadata.Index)
+	case "movie":
+		return fmt.Sprintf("Plex: %q - %s\n", j.Event, j.Metadata.Title)
+	default:
+		return fmt.Sprintf("Plex: %q - unknown type %q\n", j.Event, j.Metadata.Type)
+	}
 }
 
 // Valid checks that the data is good.
