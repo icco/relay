@@ -364,6 +364,7 @@ type Plex struct {
 		AudienceRating        float64 `json:"audienceRating"`
 		AudienceRatingImage   string  `json:"audienceRatingImage"`
 		ChapterSource         string  `json:"chapterSource"`
+		ChildCount            int     `json:"childCount"`
 		ContentRating         string  `json:"contentRating"`
 		Duration              int     `json:"duration"`
 		GUID                  string  `json:"guid"`
@@ -376,6 +377,7 @@ type Plex struct {
 		Index                 int     `json:"index"`
 		Key                   string  `json:"key"`
 		LastViewedAt          int     `json:"lastViewedAt"`
+		LeafCount             int     `json:"leafCount"`
 		LibrarySectionType    string  `json:"librarySectionType"`
 		OriginallyAvailableAt string  `json:"originallyAvailableAt"`
 		ParentGUID            string  `json:"parentGuid"`
@@ -395,6 +397,7 @@ type Plex struct {
 		Type                  string  `json:"type"`
 		UpdatedAt             int     `json:"updatedAt"`
 		ViewCount             int     `json:"viewCount"`
+		ViewedLeafCount       int     `json:"viewedLeafCount"`
 		Year                  int     `json:"year"`
 		Genre                 []struct {
 			ID    int    `json:"id"`
@@ -437,6 +440,9 @@ type Plex struct {
 			Tag   string `json:"tag"`
 			Count int    `json:"count"`
 		} `json:"Similar"`
+		Location []struct {
+			Path string `json:"path"`
+		} `json:"Location"`
 	} `json:"Metadata"`
 }
 
@@ -457,6 +463,8 @@ func (j *Plex) Message() string {
 	case "episode":
 		return fmt.Sprintf("Plex: %q - %s %dx%d\n", j.Event, j.Metadata.GrandparentTitle, j.Metadata.ParentIndex, j.Metadata.Index)
 	case "movie":
+		return fmt.Sprintf("Plex: %q - %s\n", j.Event, j.Metadata.Title)
+	case "show":
 		return fmt.Sprintf("Plex: %q - %s\n", j.Event, j.Metadata.Title)
 	default:
 		return fmt.Sprintf("Plex: %q - unknown type %q\n", j.Event, j.Metadata.Type)
