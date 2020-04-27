@@ -473,5 +473,14 @@ func (j *Plex) Message() string {
 
 // Valid checks that the data is good.
 func (j *Plex) Valid() bool {
-	return j.Event != ""
+	if j.Event == "" {
+		return false
+	}
+
+	parts := strings.Split(j.Event, ".")
+	if len(parts) <= 1 {
+		return false
+	}
+
+	return parts[0] != "media"
 }
