@@ -16,6 +16,7 @@ var (
 		jsonToGoogleCloud,
 		jsonToGoogleCloudBuild,
 		jsonToPlex,
+		jsonToInflux,
 	}
 )
 
@@ -483,4 +484,45 @@ func (j *Plex) Valid() bool {
 	}
 
 	return parts[0] != "media"
+}
+
+type Influx struct {
+	CheckID                  string    `json:"_check_id"`
+	CheckName                string    `json:"_check_name"`
+	Level                    string    `json:"_level"`
+	Measurement              string    `json:"_measurement"`
+	AlertMessage             string    `json:"_message"`
+	NotificationEndpointID   string    `json:"_notification_endpoint_id"`
+	NotificationEndpointName string    `json:"_notification_endpoint_name"`
+	NotificationRuleID       string    `json:"_notification_rule_id"`
+	NotificationRuleName     string    `json:"_notification_rule_name"`
+	SourceMeasurement        string    `json:"_source_measurement"`
+	SourceTimestamp          int64     `json:"_source_timestamp"`
+	Start                    time.Time `json:"_start"`
+	StatusTimestamp          int64     `json:"_status_timestamp"`
+	Stop                     time.Time `json:"_stop"`
+	Time                     time.Time `json:"_time"`
+	Type                     string    `json:"_type"`
+	Version                  int       `json:"_version"`
+}
+
+func jsonToInflux(buf []byte) DataType {
+	var data Influx
+	if err := json.Unmarshal(buf, &data); err != nil {
+		log.WithError(err).Error("decoding json to Influx")
+		return nil
+	}
+	log.WithField("data", data).Debug("Influx data decoded")
+
+	return &data
+}
+
+// Message returns a string representation of this object for human consumption.
+func (j *Influx) Message() string {
+	return fmt.Sprintf("TICK Alert: %q", j.AlertMessage)
+}
+
+// Valid checks that the data is good.
+func (j *Influx) Valid() bool {
+	return j.AlertMessage != ""
 }
