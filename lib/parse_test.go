@@ -77,7 +77,7 @@ func TestParse(t *testing.T) {
 		},
 		"influx alert": {
 			Have: `{"_check_id":"05f4817acbe02000","_check_name":"Load Test Check","_level":"ok","_measurement":"notifications","_message":"Check: Load Test Check is: ok","_notification_endpoint_id":"05f47c9c52d9b000","_notification_endpoint_name":"Relay","_notification_rule_id":"05f47cbfdb4b3000","_notification_rule_name":"Relay","_source_measurement":"system","_source_timestamp":1594004340000000000,"_start":"2020-07-06T02:49:00.289372603Z","_status_timestamp":1594004340165450419,"_stop":"2020-07-06T03:00:00.289372603Z","_time":"2020-07-06T03:00:00.289372603Z","_type":"threshold","_version":1,"host":"storm","load1":0.086}`,
-			Want: "",
+			Want: "TICK Alert: \"Check: Load Test Check is: ok\"",
 		},
 	}
 
