@@ -79,7 +79,7 @@ func main() {
 	if err != nil {
 		log.WithError(err).Fatal("error creating Discord session")
 	}
-	dg.AddHandler(messageRecieve)
+	dg.AddHandler(messageRecieve(db))
 
 	if err := dg.Open(); err != nil {
 		log.WithError(err).Fatal("error opening connection")
