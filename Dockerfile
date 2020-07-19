@@ -8,7 +8,5 @@ RUN apk add --no-cache git
 WORKDIR /go/src/github.com/icco/relay
 COPY . .
 
-RUN go run github.com/phogolabs/prana -- --database-url $DATABASE_URL migration run
-
 RUN go build -o /go/bin/relay .
-CMD /go/bin/relay
+CMD "go run github.com/phogolabs/prana -- --database-url $DATABASE_URL migration run && /go/bin/relay"
