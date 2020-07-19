@@ -3,6 +3,7 @@ module github.com/icco/relay
 go 1.14
 
 require (
+	cirello.io/pglock v1.8.0
 	cloud.google.com/go v0.60.0 // indirect
 	contrib.go.opencensus.io/exporter/stackdriver v0.13.2
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d
@@ -13,6 +14,7 @@ require (
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hellofresh/logging-go v0.4.0
 	github.com/icco/logrus-stackdriver-formatter v0.3.0
+	github.com/lib/pq v1.7.0
 	github.com/sirupsen/logrus v1.6.0
 	go.opencensus.io v0.22.4
 	golang.org/x/crypto v0.0.0-20200707235045-ab33eee955e0 // indirect

@@ -2,12 +2,14 @@ package main
 
 import (
 	"bytes"
+	"database/sql"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
 
+	"cirello.io/pglock"
 	"contrib.go.opencensus.io/exporter/stackdriver"
 	"contrib.go.opencensus.io/exporter/stackdriver/monitoredresource"
 	"contrib.go.opencensus.io/exporter/stackdriver/propagation"
@@ -19,6 +21,8 @@ import (
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
+
+	_ "github.com/lib/pq"
 )
 
 const (
@@ -63,6 +67,12 @@ func main() {
 			DefaultSampler: trace.AlwaysSample(),
 		})
 	}
+
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if err != nil {
+		log.Fatalf("cannot connect to database server: %+v", err)
+	}
+	defer db.Close()
 
 	// Create a new Discord session using the provided bot token.
 	dg, err := discordgo.New("Bot " + token)
@@ -204,20 +214,34 @@ func fetchPrimaryTextChannelID(sess *discordgo.Session) (string, error) {
 
 // messageRecieve will be called (due to AddHandler above) every time a new
 // message is created on any channel that the authenticated bot has access to.
-func messageRecieve(s *discordgo.Session, m *discordgo.MessageCreate) {
+func messageRecieve(db *sql.DB) func(s *discordgo.Session, m *discordgo.MessageCreate) {
+	return func(s *discordgo.Session, m *discordgo.MessageCreate) {
+		// Ignore all messages created by the bot itself
+		if m.Author.ID == s.State.User.ID {
+			return
+		}
 
-	// Ignore all messages created by the bot itself
-	// This isn't required in this specific example but it's a good practice.
-	if m.Author.ID == s.State.User.ID {
-		return
-	}
-	// If the message is "ping" reply with "Pong!"
-	if m.Content == "ping" {
-		s.ChannelMessageSend(m.ChannelID, "Pong!")
-	}
+		c, err := lib.GetLockClient(db)
+		if err != nil {
+			log.Errorf("getting lock client: %+v", err)
+			return
+		}
 
-	// If the message is "pong" reply with "Ping!"
-	if m.Content == "pong" {
-		s.ChannelMessageSend(m.ChannelID, "Ping!")
+		l, err := c.Acquire(m.Message.ID, pglock.FailIfLocked(), pglock.WithData([]byte("sent")))
+		if err != nil {
+			log.Errorf("getting lock: %+v", err)
+			return
+		}
+		defer l.Close()
+
+		// If the message is "ping" reply with "Pong!"
+		if m.Content == "ping" {
+			s.ChannelMessageSend(m.ChannelID, "Pong!")
+		}
+
+		// If the message is "pong" reply with "Ping!"
+		if m.Content == "pong" {
+			s.ChannelMessageSend(m.ChannelID, "Ping!")
+		}
 	}
 }
