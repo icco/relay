@@ -18,6 +18,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/icco/relay/lib"
+	"github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
@@ -216,6 +217,11 @@ func fetchPrimaryTextChannelID(sess *discordgo.Session) (string, error) {
 // message is created on any channel that the authenticated bot has access to.
 func messageRecieve(db *sql.DB) func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	return func(s *discordgo.Session, m *discordgo.MessageCreate) {
+		log.WithFields(logrus.Fields{
+			"session": s,
+			"message": m,
+		}).Info("recieved message")
+
 		// Ignore all messages created by the bot itself
 		if m.Author.ID == s.State.User.ID {
 			return
