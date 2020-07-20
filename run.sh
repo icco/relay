@@ -2,6 +2,7 @@
 
 set -ex
 
-go run github.com/phogolabs/prana/cmd/prana -- migration run --database-url $DATABASE_URL &
+export PRANA_DB_URL=${DATABASE_URL}
+go run github.com/phogolabs/prana/cmd/prana -- migration run &
 
 /go/bin/relay $@
