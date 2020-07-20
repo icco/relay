@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS locks (
 			record_version_number BIGINT,
 			data BYTEA,
 			owner CHARACTER VARYING(255)
+);
 
 -- name: down
 DROP TABLE IF EXISTS locks;
