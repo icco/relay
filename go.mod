@@ -15,6 +15,7 @@ require (
 	github.com/hellofresh/logging-go v0.4.0
 	github.com/icco/logrus-stackdriver-formatter v0.3.0
 	github.com/lib/pq v1.7.0
+	github.com/phogolabs/prana v1.0.0-rc2 // indirect
 	github.com/sirupsen/logrus v1.6.0
 	go.opencensus.io v0.22.4
 	golang.org/x/crypto v0.0.0-20200707235045-ab33eee955e0 // indirect
