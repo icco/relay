@@ -274,7 +274,7 @@ func (j *GoogleCloudBuild) Message() string {
 		target = sub.Artifacts.Images[0]
 	}
 
-	return fmt.Sprintf("Google Cloud Build: %s %s @ %s", strings.Title(sub.Status), target, sub.LogURL)
+	return fmt.Sprintf("Google Cloud Build: %s %s @ <%s>", strings.Title(sub.Status), target, sub.LogURL)
 }
 
 // Valid checks that the data is good.
