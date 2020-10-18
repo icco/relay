@@ -613,7 +613,7 @@ func (j *GitLabPush) Message() string {
 	for _, c := range j.Commits {
 		commits += fmt.Sprintf(" - %q @ %v %s\n", c.Author.Name, c.Timestamp, c.URL)
 	}
-	return fmt.Sprintf("GitLab %s to [%s](%s): \n%s", j.EventName, j.Project.Name, j.Project.WebURL, commits)
+	return fmt.Sprintf("GitLab %s to %s: \n%s", j.EventName, j.Project.Name, commits)
 }
 
 // Valid checks that the data is good.
