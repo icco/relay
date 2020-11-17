@@ -17,6 +17,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/cors"
 	"github.com/icco/relay/lib"
 	"github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ochttp"
@@ -92,6 +93,17 @@ func main() {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
 	r.Use(lib.LoggingMiddleware())
+
+	crs := cors.New(cors.Options{
+		AllowCredentials:   true,
+		OptionsPassthrough: false,
+		AllowedOrigins:     []string{"*"},
+		AllowedMethods:     []string{"GET", "POST", "OPTIONS"},
+		AllowedHeaders:     []string{"Accept", "Authorization", "Content-Type"},
+		ExposedHeaders:     []string{"Link"},
+		MaxAge:             300, // Maximum value not ignored by any of major browsers
+	})
+	r.Use(crs.Handler)
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("hi."))
