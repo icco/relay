@@ -171,7 +171,7 @@ func jsonToGoogleCloud(buf []byte) DataType {
 
 // Message returns a string representation of this object for human consumption.
 func (j *GoogleCloud) Message() string {
-	return fmt.Sprintf("GCP Alert - %q\n", j.Incident.Summary)
+	return fmt.Sprintf("GCP Alert\n - %q\n - %s\n - <%s>", j.Incident.Summary, j.Incident.PolicyName, j.Incident.URL)
 }
 
 // Valid checks that the data is good.
