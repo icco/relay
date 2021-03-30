@@ -14,13 +14,13 @@ require (
 	github.com/go-chi/cors v1.2.0
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
-	github.com/icco/gutil v0.0.0-20210330033453-6d7636e60ab1
+	github.com/icco/gutil v0.0.0-20210330033755-1df24c58997b
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/lib/pq v1.10.0
 	go.opencensus.io v0.23.0
 	go.uber.org/zap v1.16.0
 	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2 // indirect
-	golang.org/x/net v0.0.0-20210329181859-df645c7b52b1 // indirect
+	golang.org/x/net v0.0.0-20210330075724-22f4162a9025 // indirect
 	golang.org/x/oauth2 v0.0.0-20210323180902-22b0adad7558 // indirect
 	golang.org/x/sys v0.0.0-20210326220804-49726bf1d181 // indirect
 	google.golang.org/api v0.43.0 // indirect
