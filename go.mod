@@ -10,12 +10,11 @@ require (
 	github.com/aws/aws-sdk-go v1.38.8 // indirect
 	github.com/bwmarrin/discordgo v0.23.2
 	github.com/census-instrumentation/opencensus-proto v0.3.0 // indirect
-	github.com/go-chi/chi v4.1.2+incompatible
+	github.com/go-chi/chi v1.5.4
 	github.com/go-chi/cors v1.2.0
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/icco/gutil v0.0.0-20210330033755-1df24c58997b
-	github.com/kr/pretty v0.2.0 // indirect
 	github.com/lib/pq v1.10.0
 	go.opencensus.io v0.23.0
 	go.uber.org/zap v1.16.0
@@ -25,6 +24,4 @@ require (
 	golang.org/x/sys v0.0.0-20210326220804-49726bf1d181 // indirect
 	google.golang.org/api v0.43.0 // indirect
 	google.golang.org/genproto v0.0.0-20210329143202-679c6ae281ee // indirect
-	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
-	gopkg.in/yaml.v2 v2.3.0 // indirect
 )
