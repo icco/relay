@@ -4,30 +4,27 @@ go 1.14
 
 require (
 	cirello.io/pglock v1.8.0
-	cloud.google.com/go v0.69.1 // indirect
-	contrib.go.opencensus.io/exporter/stackdriver v0.13.4
-	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d
-	github.com/aws/aws-sdk-go v1.35.9 // indirect
-	github.com/bwmarrin/discordgo v0.22.0
+	cloud.google.com/go v0.80.0 // indirect
+	contrib.go.opencensus.io/exporter/stackdriver v0.13.5
+	github.com/alecthomas/units v0.0.0-20210208195552-ff826a37aa15
+	github.com/aws/aws-sdk-go v1.38.8 // indirect
+	github.com/bwmarrin/discordgo v0.23.2
 	github.com/census-instrumentation/opencensus-proto v0.3.0 // indirect
-	github.com/felixge/httpsnoop v1.0.1
 	github.com/go-chi/chi v4.1.2+incompatible
-	github.com/go-chi/cors v1.1.1
-	github.com/golang/protobuf v1.4.3 // indirect
+	github.com/go-chi/cors v1.2.0
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
-	github.com/hellofresh/logging-go v0.4.0
-	github.com/icco/logrus-stackdriver-formatter v0.3.0
+	github.com/icco/gutil v0.0.0-20210330033453-6d7636e60ab1
 	github.com/kr/pretty v0.2.0 // indirect
-	github.com/lib/pq v1.8.0
-	github.com/sirupsen/logrus v1.7.0
-	go.opencensus.io v0.22.5
-	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897 // indirect
-	golang.org/x/net v0.0.0-20201016165138-7b1cca2348c0 // indirect
-	golang.org/x/sync v0.0.0-20201008141435-b3e1573b7520 // indirect
-	golang.org/x/sys v0.0.0-20201018121011-98379d014ca7 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20201015140912-32ed001d685c // indirect
-	google.golang.org/grpc v1.33.0 // indirect
+	github.com/lib/pq v1.10.0
+	go.opencensus.io v0.23.0
+	go.uber.org/zap v1.16.0
+	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2 // indirect
+	golang.org/x/net v0.0.0-20210329181859-df645c7b52b1 // indirect
+	golang.org/x/oauth2 v0.0.0-20210323180902-22b0adad7558 // indirect
+	golang.org/x/sys v0.0.0-20210326220804-49726bf1d181 // indirect
+	google.golang.org/api v0.43.0 // indirect
+	google.golang.org/genproto v0.0.0-20210329143202-679c6ae281ee // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )

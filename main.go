@@ -18,11 +18,12 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
+	"github.com/icco/gutil/logging"
 	"github.com/icco/relay/lib"
-	"github.com/sirupsen/logrus"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
+	"go.uber.org/zap"
 
 	_ "github.com/lib/pq"
 )
@@ -30,36 +31,39 @@ import (
 const (
 	permissions = 51264
 	channelID   = "ops"
-)
-
-var (
-	log = lib.InitLogging()
+	project     = "relay"
+	gcpID       = "icco-cloud"
 )
 
 func main() {
+	log, err := logging.NewLogger(project)
+	if err != nil {
+		panic(err)
+	}
+
 	token := os.Getenv("DISCORD_TOKEN")
 	if token == "" {
-		log.Fatalf("DISCORD_TOKEN is empty")
+		log.Fatal("DISCORD_TOKEN is empty")
 	}
 
 	port := "8080"
 	if fromEnv := os.Getenv("PORT"); fromEnv != "" {
 		port = fromEnv
 	}
-	log.Infof("Starting up on http://localhost:%s", port)
+	log.Infow("Starting up", "host", fmt.Sprintf("http://localhost:%s", port))
 
 	if os.Getenv("ENABLE_STACKDRIVER") != "" {
 		labels := &stackdriver.Labels{}
-		labels.Set("app", "relay", "The name of the current app.")
+		labels.Set("app", project, "The name of the current app.")
 		sd, err := stackdriver.NewExporter(stackdriver.Options{
-			ProjectID:               "icco-cloud",
+			ProjectID:               gcpID,
 			MonitoredResource:       monitoredresource.Autodetect(),
 			DefaultMonitoringLabels: labels,
-			DefaultTraceAttributes:  map[string]interface{}{"app": "relay"},
+			DefaultTraceAttributes:  map[string]interface{}{"app": project},
 		})
 
 		if err != nil {
-			log.WithError(err).Fatalf("failed to create the stackdriver exporter")
+			log.Fatalw("failed to create the stackdriver exporter", zap.Error(err))
 		}
 		defer sd.Flush()
 
@@ -72,19 +76,19 @@ func main() {
 
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
-		log.Fatalf("cannot connect to database server: %+v", err)
+		log.Fatalw("cannot connect to database server", zap.Error(err))
 	}
 	defer db.Close()
 
 	// Create a new Discord session using the provided bot token.
 	dg, err := discordgo.New("Bot " + token)
 	if err != nil {
-		log.WithError(err).Fatal("error creating Discord session")
+		log.Fatalw("error creating Discord session", zap.Error(err))
 	}
 	dg.AddHandler(messageRecieve(db))
 
 	if err := dg.Open(); err != nil {
-		log.WithError(err).Fatal("error opening connection")
+		log.Fatalw("error opening connection", zap.Error(err))
 	}
 	defer dg.Close()
 
@@ -92,7 +96,7 @@ func main() {
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Recoverer)
-	r.Use(lib.LoggingMiddleware())
+	r.Use(logging.Middleware(log, gcpID))
 
 	crs := cors.New(cors.Options{
 		AllowCredentials:   true,
@@ -115,11 +119,11 @@ func main() {
 
 	r.Post("/hook", func(w http.ResponseWriter, r *http.Request) {
 		ct := r.Header.Get("content-type")
-		log.WithField("content-type", ct).Debug("got content-type")
+		log.Debugw("got content-type", "content-type", ct)
 
 		buf, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			log.WithError(err).Error("could not read buffer")
+			log.Errorw("could not read buffer", zap.Error(err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -137,28 +141,28 @@ func main() {
 		default:
 			err := r.ParseMultipartForm(int64(20 * units.Megabyte))
 			if err != nil {
-				log.WithError(err).WithField("body", string(buf)).Error("could not parse form")
+				log.Errorw("could not parse form", "body", string(buf), zap.Error(err))
 				http.Error(w, err.Error(), 500)
 				return
 			}
 			parts := strings.Split(ct, ";")
-			log.WithField("parts", parts).Debug("parsing form")
+			log.Debugw("parsing form", "parts", parts)
 			if len(parts) >= 1 && parts[0] == "multipart/form-data" {
 				val := r.FormValue("payload")
-				log.WithField("payload", val).Debug("attempting form parse")
+				log.Debugw("attempting form parse", "payload", val)
 				msg = lib.BufferToMessage([]byte(val))
 			}
 		}
 
 		// Generates a 200, but log an error, because this shouldn't happen.
 		if msg == "" {
-			log.WithField("body", string(buf)).Error("empty message generated")
+			log.Errorw("empty message generated", "body", string(buf))
 			w.Write([]byte(""))
 			return
 		}
 
 		if err := messageCreate(dg, msg); err != nil {
-			log.WithError(err).Error("could not send message")
+			log.Errorw("could not send message", zap.Error(err))
 			http.Error(w, err.Error(), 500)
 			return
 		}
@@ -174,7 +178,7 @@ func main() {
 		ochttp.ServerRequestCountView,
 		ochttp.ServerResponseCountByStatusCode,
 	}...); err != nil {
-		log.WithError(err).Fatal("Failed to register ochttp views")
+		log.Fatalw("Failed to register ochttp views", zap.Error(err))
 	}
 
 	log.Fatal(http.ListenAndServe(":"+port, h))
@@ -229,10 +233,7 @@ func fetchPrimaryTextChannelID(sess *discordgo.Session) (string, error) {
 // message is created on any channel that the authenticated bot has access to.
 func messageRecieve(db *sql.DB) func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	return func(s *discordgo.Session, m *discordgo.MessageCreate) {
-		log.WithFields(logrus.Fields{
-			"session": s,
-			"message": m,
-		}).Info("recieved message")
+		log.Infow("recieved message", "session", s, "message", m)
 
 		// Ignore all messages created by the bot itself
 		if m.Author.ID == s.State.User.ID {
@@ -241,13 +242,13 @@ func messageRecieve(db *sql.DB) func(s *discordgo.Session, m *discordgo.MessageC
 
 		c, err := lib.GetLockClient(db)
 		if err != nil {
-			log.Errorf("getting lock client: %+v", err)
+			log.Errorw("getting lock client", zap.Error(err))
 			return
 		}
 
 		l, err := c.Acquire(m.Message.ID, pglock.FailIfLocked(), pglock.WithData([]byte("sent")))
 		if err != nil {
-			log.Errorf("getting lock: %+v", err)
+			log.Errorw("getting lock", zap.Error(err))
 			return
 		}
 		defer l.Close()
