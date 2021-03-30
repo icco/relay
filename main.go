@@ -35,12 +35,11 @@ const (
 	gcpID       = "icco-cloud"
 )
 
-func main() {
-	log, err := logging.NewLogger(project)
-	if err != nil {
-		panic(err)
-	}
+var (
+	log = logging.Must(logging.NewLogger(project))
+)
 
+func main() {
 	token := os.Getenv("DISCORD_TOKEN")
 	if token == "" {
 		log.Fatal("DISCORD_TOKEN is empty")
