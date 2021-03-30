@@ -14,7 +14,7 @@ require (
 	github.com/go-chi/cors v1.2.0
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
-	github.com/icco/gutil v0.0.0-20210330120508-f3e5afb6db39
+	github.com/icco/gutil v0.0.0-20210330122226-3a49268b2a1c
 	github.com/lib/pq v1.10.0
 	go.opencensus.io v0.23.0
 	go.uber.org/zap v1.16.0
