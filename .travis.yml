@@ -10,3 +10,7 @@ script:
   - go vet ./...
   - go run golang.org/x/lint/golint -set_exit_status ./...
   - go run github.com/fzipp/gocyclo/cmd/gocyclo -avg .
+notifications:
+  email:
+    on_success: change
+    on_failure: change

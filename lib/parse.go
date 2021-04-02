@@ -7,6 +7,9 @@ import (
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/icco/gutil/logging"
+	"go.uber.org/zap"
 )
 
 var (
@@ -19,6 +22,8 @@ var (
 		jsonToInflux,
 		jsonToGitLabPush,
 	}
+
+	log = logging.Must(logging.NewLogger("relay"))
 )
 
 // DataParseFunc is the generic func type for parsing input.
@@ -32,8 +37,9 @@ type DataType interface {
 
 // BufferToMessage takes in a message buffer and returns a message string.
 func BufferToMessage(buf []byte) string {
+
 	var msg string
-	log.WithField("body", string(buf)).Debug("attempting to parse")
+	log.Debugw("attempting to parse", "body", string(buf))
 
 	for _, f := range funcs {
 		if data := f(buf); data != nil {
@@ -46,7 +52,7 @@ func BufferToMessage(buf []byte) string {
 	if msg == "" {
 		var f map[string]string
 		if err := json.Unmarshal(buf, &f); err != nil {
-			log.WithError(err).Info("decoding json to map")
+			log.Infow("decoding json to map", zap.Error(err))
 			return ""
 		}
 
@@ -86,10 +92,10 @@ type Sonarr struct {
 func jsonToSonarr(buf []byte) DataType {
 	var data Sonarr
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.WithError(err).Error("decoding json to Sonarr")
+		log.Warnw("decoding json to Sonarr", zap.Error(err))
 		return nil
 	}
-	log.WithField("data", data).Debug("Sonarr data decoded")
+	log.Debugw("Sonarr data decoded", "data", data)
 
 	return &data
 }
@@ -161,10 +167,10 @@ type GoogleCloud struct {
 func jsonToGoogleCloud(buf []byte) DataType {
 	var data GoogleCloud
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.WithError(err).Error("decoding json to GoogleCloud")
+		log.Error("decoding json to GoogleCloud", zap.Error(err))
 		return nil
 	}
-	log.WithField("data", data).Debug("GoogleCloud data decoded")
+	log.Debugw("GoogleCloud data decoded", "data", data)
 
 	return &data
 }
@@ -248,10 +254,10 @@ type GCBBuildResource struct {
 func jsonToGoogleCloudBuild(buf []byte) DataType {
 	var data GoogleCloudBuild
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.WithError(err).Error("decoding json to GoogleCloudBuild")
+		log.Warnw("decoding json to GoogleCloudBuild", zap.Error(err))
 		return nil
 	}
-	log.WithField("data", data).Debug("GoogleCloudBuild data decoded")
+	log.Debugw("GoogleCloudBuild data decoded", "data", data)
 
 	return &data
 }
@@ -260,12 +266,12 @@ func jsonToGoogleCloudBuild(buf []byte) DataType {
 func (j *GoogleCloudBuild) Message() string {
 	data, err := base64.StdEncoding.DecodeString(j.Msg.Data)
 	if err != nil {
-		log.WithError(err).WithField("data", j.Msg.Data).Error("could not decode base64 data")
+		log.Warnw("could not decode base64 data", zap.Error(err), "data", j.Msg.Data)
 		return ""
 	}
 	var sub GCBBuildResource
 	if err := json.Unmarshal(data, &sub); err != nil {
-		log.WithError(err).Error("decoding json to GoogleCloudBuild Sub")
+		log.Warnw("decoding json to GoogleCloudBuild Sub", zap.Error(err))
 		return ""
 	}
 
@@ -316,10 +322,10 @@ type Lidarr struct {
 func jsonToLidarr(buf []byte) DataType {
 	var data Lidarr
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.WithError(err).Error("decoding json to Lidarr")
+		log.Warnw("decoding json to Lidarr", zap.Error(err))
 		return nil
 	}
-	log.WithField("data", data).Debug("Lidarr data decoded")
+	log.Debugw("Lidarr data decoded", "data", data)
 
 	return &data
 }
@@ -451,10 +457,10 @@ type Plex struct {
 func jsonToPlex(buf []byte) DataType {
 	var data Plex
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.WithError(err).Error("decoding json to Plex")
+		log.Warnw("decoding json to Plex", zap.Error(err))
 		return nil
 	}
-	log.WithField("data", data).Debug("Plex data decoded")
+	log.Debugw("Plex data decoded", "data", data)
 
 	return &data
 }
@@ -513,10 +519,10 @@ type Influx struct {
 func jsonToInflux(buf []byte) DataType {
 	var data Influx
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.WithError(err).Error("decoding json to Influx")
+		log.Warnw("decoding json to Influx", zap.Error(err))
 		return nil
 	}
-	log.WithField("data", data).Debug("Influx data decoded")
+	log.Debugw("Influx data decoded", "data", data)
 
 	return &data
 }
@@ -599,10 +605,10 @@ type GitLabPush struct {
 func jsonToGitLabPush(buf []byte) DataType {
 	var data GitLabPush
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.WithError(err).Error("decoding json to Influx")
+		log.Warnw("decoding json to Influx", zap.Error(err))
 		return nil
 	}
-	log.WithField("data", data).Debug("GitLabPush data decoded")
+	log.Debugw("GitLabPush data decoded", "data", data)
 
 	return &data
 }
