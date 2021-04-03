@@ -92,10 +92,8 @@ func main() {
 	defer dg.Close()
 
 	r := chi.NewRouter()
-	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
-	r.Use(middleware.Recoverer)
-	// r.Use(logging.Middleware(log.Desugar(), gcpID))
+	r.Use(logging.Middleware(log.Desugar(), gcpID))
 
 	crs := cors.New(cors.Options{
 		AllowCredentials:   true,

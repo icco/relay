@@ -15,7 +15,7 @@ require (
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
-	github.com/icco/gutil v0.0.0-20210402020252-a70f58338acb
+	github.com/icco/gutil v0.0.0-20210403015724-09144c640035
 	github.com/lib/pq v1.10.0
 	go.opencensus.io v0.23.0
 	go.uber.org/zap v1.16.0
