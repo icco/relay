@@ -151,9 +151,9 @@ func main() {
 			}
 		}
 
-		// Generates a 200, but log an error, because this shouldn't happen.
+		// Generates a 200, but log a warning, because this shouldn't happen too often.
 		if msg == "" {
-			log.Errorw("empty message generated", "body", string(buf))
+			log.Warnw("empty message generated", "body", string(buf))
 			w.Write([]byte(""))
 			return
 		}
