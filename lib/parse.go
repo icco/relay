@@ -167,7 +167,7 @@ type GoogleCloud struct {
 func jsonToGoogleCloud(buf []byte) DataType {
 	var data GoogleCloud
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.Error("decoding json to GoogleCloud", zap.Error(err))
+		log.Warnw("decoding json to GoogleCloud", zap.Error(err))
 		return nil
 	}
 	log.Debugw("GoogleCloud data decoded", "data", data)
