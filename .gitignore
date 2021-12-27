@@ -16,3 +16,4 @@ vendor/
 
 relay
 .env
+.DS_Store
