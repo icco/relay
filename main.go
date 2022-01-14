@@ -10,9 +10,6 @@ import (
 	"strings"
 
 	"cirello.io/pglock"
-	"contrib.go.opencensus.io/exporter/stackdriver"
-	"contrib.go.opencensus.io/exporter/stackdriver/monitoredresource"
-	"contrib.go.opencensus.io/exporter/stackdriver/propagation"
 	"github.com/alecthomas/units"
 	"github.com/bwmarrin/discordgo"
 	"github.com/go-chi/chi/v5"
@@ -21,9 +18,6 @@ import (
 	"github.com/icco/gutil/logging"
 	"github.com/icco/gutil/otel"
 	"github.com/icco/relay/lib"
-	"go.opencensus.io/plugin/ochttp"
-	"go.opencensus.io/stats/view"
-	"go.opencensus.io/trace"
 	"go.uber.org/zap"
 
 	_ "github.com/lib/pq"
@@ -151,18 +145,7 @@ func main() {
 		w.Write([]byte(""))
 	})
 
-	h := &ochttp.Handler{
-		Handler:     r,
-		Propagation: &propagation.HTTPFormat{},
-	}
-	if err := view.Register([]*view.View{
-		ochttp.ServerRequestCountView,
-		ochttp.ServerResponseCountByStatusCode,
-	}...); err != nil {
-		log.Fatalw("Failed to register ochttp views", zap.Error(err))
-	}
-
-	log.Fatal(http.ListenAndServe(":"+port, h))
+	log.Fatal(http.ListenAndServe(":"+port, r))
 }
 
 func messageCreate(s *discordgo.Session, m string) error {
