@@ -8,7 +8,7 @@ require (
 	github.com/bwmarrin/discordgo v0.23.2
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-chi/cors v1.2.0
-	github.com/icco/gutil v0.0.0-20220114022009-3feee069efd6
+	github.com/icco/gutil v0.0.0-20220114023342-a7824029aba7
 	github.com/lib/pq v1.10.4
 	go.uber.org/zap v1.20.0
 )
