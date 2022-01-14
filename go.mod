@@ -1,6 +1,6 @@
 module github.com/icco/relay
 
-go 1.14
+go 1.17
 
 require (
 	cirello.io/pglock v1.8.0
