@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"database/sql"
 	"fmt"
 	"io/ioutil"
@@ -10,19 +11,14 @@ import (
 	"strings"
 
 	"cirello.io/pglock"
-	"contrib.go.opencensus.io/exporter/stackdriver"
-	"contrib.go.opencensus.io/exporter/stackdriver/monitoredresource"
-	"contrib.go.opencensus.io/exporter/stackdriver/propagation"
 	"github.com/alecthomas/units"
 	"github.com/bwmarrin/discordgo"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/icco/gutil/logging"
+	"github.com/icco/gutil/otel"
 	"github.com/icco/relay/lib"
-	"go.opencensus.io/plugin/ochttp"
-	"go.opencensus.io/stats/view"
-	"go.opencensus.io/trace"
 	"go.uber.org/zap"
 
 	_ "github.com/lib/pq"
@@ -51,26 +47,9 @@ func main() {
 	}
 	log.Infow("Starting up", "host", fmt.Sprintf("http://localhost:%s", port))
 
-	if os.Getenv("ENABLE_STACKDRIVER") != "" {
-		labels := &stackdriver.Labels{}
-		labels.Set("app", project, "The name of the current app.")
-		sd, err := stackdriver.NewExporter(stackdriver.Options{
-			ProjectID:               gcpID,
-			MonitoredResource:       monitoredresource.Autodetect(),
-			DefaultMonitoringLabels: labels,
-			DefaultTraceAttributes:  map[string]interface{}{"app": project},
-		})
-
-		if err != nil {
-			log.Fatalw("failed to create the stackdriver exporter", zap.Error(err))
-		}
-		defer sd.Flush()
-
-		view.RegisterExporter(sd)
-		trace.RegisterExporter(sd)
-		trace.ApplyConfig(trace.Config{
-			DefaultSampler: trace.AlwaysSample(),
-		})
+	ctx := context.Background()
+	if err := otel.Init(ctx, log, gcpID, project); err != nil {
+		log.Errorw("could not init opentelemetry", zap.Error(err))
 	}
 
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
@@ -92,6 +71,7 @@ func main() {
 	defer dg.Close()
 
 	r := chi.NewRouter()
+	r.Use(otel.Middleware)
 	r.Use(middleware.RealIP)
 	r.Use(logging.Middleware(log.Desugar(), gcpID))
 
@@ -167,18 +147,7 @@ func main() {
 		w.Write([]byte(""))
 	})
 
-	h := &ochttp.Handler{
-		Handler:     r,
-		Propagation: &propagation.HTTPFormat{},
-	}
-	if err := view.Register([]*view.View{
-		ochttp.ServerRequestCountView,
-		ochttp.ServerResponseCountByStatusCode,
-	}...); err != nil {
-		log.Fatalw("Failed to register ochttp views", zap.Error(err))
-	}
-
-	log.Fatal(http.ListenAndServe(":"+port, h))
+	log.Fatal(http.ListenAndServe(":"+port, r))
 }
 
 func messageCreate(s *discordgo.Session, m string) error {
