@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"database/sql"
 	"fmt"
 	"io/ioutil"
@@ -46,7 +47,8 @@ func main() {
 	}
 	log.Infow("Starting up", "host", fmt.Sprintf("http://localhost:%s", port))
 
-	if err := otel.Init(ctx, log, *project, service); err != nil {
+	ctx := context.Background()
+	if err := otel.Init(ctx, log, gcpID, project); err != nil {
 		log.Errorw("could not init opentelemetry", zap.Error(err))
 	}
 
