@@ -10,5 +10,6 @@ RUN apk add --no-cache git make g++ ca-certificates
 WORKDIR /go/src/github.com/icco/relay
 COPY . .
 
+RUN go get github.com/phogolabs/prana/cmd/prana
 RUN go build -o /go/bin/relay .
 CMD ./run.sh
