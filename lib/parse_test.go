@@ -89,7 +89,7 @@ func TestParse(t *testing.T) {
 		},
 		"plex album": {
 			Have: `{"event":"library.new","user":true,"owner":true,"Account":{"id":639131,"thumb":"https://plex.tv/users/b921c1a7580bf543/avatar?c=1662304482","title":"icco"},"Server":{"title":"storm","uuid":"544b62f0b4f85d5d8f2c91696763d13578f5264a"},"Metadata":{"librarySectionType":"artist","ratingKey":"239918","key":"/library/metadata/239918/children","parentRatingKey":"220417","guid":"local://239918","parentGuid":"plex://artist/5d07bbfd403c6402904a6579","type":"album","title":"Grave Diggers: Tom Waits","parentKey":"/library/metadata/220417","librarySectionTitle":"Music","librarySectionID":3,"librarySectionKey":"/library/sections/3","parentTitle":"Tom Waits","summary":"","index":1,"year":2022,"thumb":"/library/metadata/239918/thumb/1684767305","art":"/library/metadata/220417/art/1684748132","parentThumb":"/library/metadata/220417/thumb/1684748132","originallyAvailableAt":"2022-01-01","leafCount":6,"viewedLeafCount":0,"addedAt":1684767304,"updatedAt":1684767305,"Genre":[{"id":493305,"filter":"genre=493305","tag":"Rock"}]}}`,
-			Want: "",
+			Want: "Plex: \"library.new\" - Grave Diggers: Tom Waits by Tom Waits\n",
 		},
 		"radarr": {
 			Have: ``,

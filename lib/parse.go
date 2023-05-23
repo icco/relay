@@ -470,6 +470,8 @@ func (j *Plex) Message() string {
 		return fmt.Sprintf("Plex: %q - %s\n", j.Event, j.Metadata.Title)
 	case "show":
 		return fmt.Sprintf("Plex: %q - %s\n", j.Event, j.Metadata.Title)
+	case "album":
+		return fmt.Sprintf("Plex: %q - %s by %s\n", j.Event, j.Metadata.Title, j.Metadata.ParentTitle)
 	default:
 		return fmt.Sprintf("Plex: %q - unknown type %q\n", j.Event, j.Metadata.Type)
 	}
