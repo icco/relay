@@ -105,7 +105,7 @@ func TestParse(t *testing.T) {
 		},
 		"gcp update": {
 			Have: `{"deployed": "writing", "image": "gcr.io/icco-cloud/writing:4884a292f0571d18ea62e84d22e53884fde47bf8"}`,
-			Want: `Deployed "gcr.io/icco-cloud/writing:4884a292f0571d18ea62e84d22e53884fde47bf8" to "writing".`,
+			Want: "deployed: writing\nimage: gcr.io/icco-cloud/writing:4884a292f0571d18ea62e84d22e53884fde47bf8\n",
 		},
 	}
 
