@@ -13,6 +13,7 @@ var (
 	funcs = []DataParseFunc{
 		jsonToSonarr,
 		jsonToLidarr,
+		jsonToReadarr,
 		jsonToGoogleCloud,
 		jsonToGoogleCloudBuild,
 		jsonToPlex,
