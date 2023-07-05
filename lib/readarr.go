@@ -1,5 +1,13 @@
 package lib
 
+import (
+	"encoding/json"
+	"fmt"
+	"time"
+
+	"go.uber.org/zap"
+)
+
 type Readarr struct {
 	Author struct {
 		ID          int    `json:"id"`
