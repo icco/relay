@@ -84,5 +84,5 @@ func (j *Radarr) Message() string {
 
 // Valid checks that the data is good.
 func (j *Radarr) Valid() bool {
-	return j.EventType != "" && len(j.Books) > 0 && j.Author.Name != ""
+	return j.EventType != "" && j.Movie.Title != ""
 }
