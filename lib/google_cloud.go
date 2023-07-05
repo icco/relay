@@ -214,5 +214,5 @@ func (j *DeployMessage) Message() string {
 
 // Valid checks that the data is good.
 func (j *DeployMessage) Valid() bool {
-	return j.Deploy != "" && j.Image != ""
+	return j.Deployed != "" && j.Image != ""
 }
