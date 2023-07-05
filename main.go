@@ -228,8 +228,6 @@ func fetchPrimaryTextChannelID(sess *discordgo.Session) (string, error) {
 // message is created on any channel that the authenticated bot has access to.
 func messageRecieve(db *sql.DB) func(s *discordgo.Session, m *discordgo.MessageCreate) {
 	return func(s *discordgo.Session, m *discordgo.MessageCreate) {
-		log.Debugw("recieved message", "session", s, "message", m)
-
 		// Ignore all messages created by the bot itself
 		if m.Author.ID == s.State.User.ID {
 			return
