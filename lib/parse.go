@@ -18,6 +18,7 @@ var (
 		jsonToPlex,
 		jsonToInflux,
 		jsonToGitLabPush,
+		jsonToDeployMessage,
 	}
 
 	log = logging.Must(logging.NewLogger("relay"))

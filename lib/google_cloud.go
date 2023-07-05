@@ -209,7 +209,7 @@ func jsonToDeployMessage(buf []byte) DataType {
 
 // Message returns a string representation of this object for human consumption.
 func (j *DeployMessage) Message() string {
-	return fmt.Sprintf("Deploy: %q -> %q", j.Deployed, j.Image)
+	return fmt.Sprintf("Deployed: %q -> %q", j.Deployed, j.Image)
 }
 
 // Valid checks that the data is good.

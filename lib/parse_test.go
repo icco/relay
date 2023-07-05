@@ -68,8 +68,8 @@ func TestParse(t *testing.T) {
 			Want: "",
 		},
 		"update": {
-			Have: ``,
-			Want: "",
+			Have: `{"deployed": "relay", "image": "gcr.io/icco-cloud/relay:0fd7bb0ecd170b145417563156e8ab77eb265f9e"}`,
+			Want: `Deployed: "relay" -> "gcr.io/icco-cloud/relay:0fd7bb0ecd170b145417563156e8ab77eb265f9e"`,
 		},
 		"gcp update": {
 			Have: `{"deployed": "writing", "image": "gcr.io/icco-cloud/writing:4884a292f0571d18ea62e84d22e53884fde47bf8"}`,
