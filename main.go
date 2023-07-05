@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -124,11 +125,25 @@ func hookHandler(dg *discordgo.Session) http.HandlerFunc {
 		case "plain/text":
 			parseMethod = "plaintext"
 			msg = string(buf)
+		case "application/x-www-form-urlencoded":
+			parseMethod = "urlencoded"
+			if err := r.ParseForm(); err != nil {
+				log.Errorw("could not parse form", "body", string(buf), zap.Error(err))
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			values := r.Form
+			str, err := json.Marshal(values)
+			if err != nil {
+				log.Errorw("could not marshal values", "body", string(buf), "values", values, zap.Error(err))
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+			msg = lib.BufferToMessage(str)
 		default:
 			parseMethod = "form"
 			if err := r.ParseMultipartForm(int64(20 * units.Megabyte)); err != nil {
-				log.Errorw("could not parse form", "body", string(buf), zap.Error(err))
-				http.Error(w, err.Error(), 500)
+				log.Errorw("could not parse multipart form", "body", string(buf), zap.Error(err))
+				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
 			parts := strings.Split(ct, ";")

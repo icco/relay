@@ -15,9 +15,13 @@ func TestHookHandler(t *testing.T) {
 		contentType string
 		body        string
 	}{
-		"empty": {
+		"empty form": {
 			contentType: "application/x-www-form-urlencoded",
 			body:        "",
+		},
+		"form": {
+			contentType: "application/x-www-form-urlencoded",
+			body:        "key1=value1&key2=value21&key2=value22&key3=value3",
 		},
 		"json": {
 			body:        `{"test": "test"}`,
@@ -27,7 +31,7 @@ func TestHookHandler(t *testing.T) {
 			body:        "this is a plain text message",
 			contentType: "plain/text",
 		},
-		"form": {
+		"multipart form": {
 			contentType: "multipart/form-data; boundary=------------------------e9b6fd531fc73c30",
 			body: `--------------------------e9b6fd531fc73c30
 Content-Disposition: form-data; name="payload"
