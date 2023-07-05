@@ -73,19 +73,20 @@ func TestParse(t *testing.T) {
 		},
 		"servarr_update": {
 			Have: `{ "message": "Radarr updated from 4.5.2.7388 to 4.6.4.7568", "previousVersion": "4.5.2.7388", "newVersion": "4.6.4.7568", "eventType": "ApplicationUpdate", "instanceName": "Radarr", "applicationUrl": "" }`,
-			Want: `Radarr: Radarr updated from 4.5.2.7388 to 4.6.4.7568`,
+			Want: "Radarr: Radarr updated from 4.5.2.7388 to 4.6.4.7568\n",
 		},
 		"pullio": {
 			Have: `{ "container": "sonarr", "image": "cr.hotio.dev/hotio/sonarr:v4", "avatar": "", "old_image_id": "0ce70067c46d3fe151eb1484eeefb5c676524061a8a6bd2eb3c416bab3758dd2", "new_image_id": "e08a14f44f7c0169c732b0cefdec8e67f5f3023d5621419a716ca0c9b942b384", "old_version": "4.0.0.548", "new_version": "4.0.0.551", "old_revision": "f256f1510757fd97dba24aa4d09fc99423c95023", "new_revision": "ffffc1a10022d940904d8bd18b6adea76ee51a22", "type": "update_success", "url": "", "timestamp": "2023-07-03T12:00:35.960Z" }`,
-			Want: `pullio: updated "sonarr": "4.0.0.548" -> "4.0.0.551"`,
+			Want: "Pullio: updated \"sonarr\": \"4.0.0.548\" -> \"4.0.0.551\"\n",
 		},
 	}
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
+			name := name
 			got := BufferToMessage([]byte(tc.Have))
 			if got != tc.Want {
-				t.Errorf("BufferToMessage(%q) returned %q wanted %q", tc.Have, got, tc.Want)
+				t.Errorf("BufferToMessage(%q) returned %q wanted %q", name, got, tc.Want)
 			}
 		})
 	}
