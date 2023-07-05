@@ -22,24 +22,7 @@ func TestParse(t *testing.T) {
 			Want: "GCB: SUCCESS [gcr.io/icco-cloud/locative.garden:latest gcr.io/icco-cloud/locative.garden:7ef7ee675215ccd0807310c01dccfce3ee29510d] @ <https://console.cloud.google.com/cloud-build/builds/3b34ea43-928e-4b32-95c6-47f47c683d5e?project=940380154622>",
 		},
 		"sonarr": {
-			Have: `{
-  "episodes": [
-    {
-      "id": 123,
-      "episodeNumber": 1,
-      "seasonNumber": 1,
-      "title": "Test title",
-      "qualityVersion": 0
-    }
-  ],
-  "eventType": "Test",
-  "series": {
-    "id": 1,
-    "title": "Test Title",
-    "path": "C:\\testpath",
-    "tvdbId": 1234
-  }
-}`,
+			Have: `{ "episodes": [ { "id": 123, "episodeNumber": 1, "seasonNumber": 1, "title": "Test title", "qualityVersion": 0 } ], "eventType": "Test", "series": { "id": 1, "title": "Test Title", "path": "C:\\testpath", "tvdbId": 1234 } }`,
 			Want: "Sonarr: Test Title 1x01 - \"Test\"\n",
 		},
 		"simple": {
@@ -47,22 +30,7 @@ func TestParse(t *testing.T) {
 			Want: "hi: xyz\ntest: bar\n",
 		},
 		"lidarr": {
-			Have: `{
-  "albums": [
-    {
-      "id": 123,
-      "title": "Test title",
-      "qualityVersion": 0
-    }
-  ],
-  "eventType": "Test",
-  "artist": {
-    "id": 1,
-    "name": "Test Name",
-    "path": "C:\\testpath",
-    "mbId": "aaaaa-aaa-aaaa-aaaaaa"
-  }
-}`,
+			Have: `{ "albums": [ { "id": 123, "title": "Test title", "qualityVersion": 0 } ], "eventType": "Test", "artist": { "id": 1, "name": "Test Name", "path": "C:\\testpath", "mbId": "aaaaa-aaa-aaaa-aaaaaa" } }`,
 			Want: "Lidarr: Test Name - \"Test title\" - Test\n",
 		},
 		"plex TV Episode": {
@@ -92,20 +60,16 @@ func TestParse(t *testing.T) {
 			Want: "Plex: \"library.new\" - Grave Diggers: Tom Waits by Tom Waits\n",
 		},
 		"radarr": {
-			Have: ``,
-			Want: "",
+			Have: `{ "movie": { "id": 2403, "title": "Blockers", "year": 2018, "releaseDate": "2018-07-03", "folderPath": "/data/Movies/Blockers (2018)", "tmdbId": 437557, "imdbId": "tt2531344", "overview": "When three parents discover that each of their daughters have a pact to lose their virginity at prom, they launch a covert one-night operation to stop the teens from sealing the deal." }, "remoteMovie": { "tmdbId": 437557, "imdbId": "tt2531344", "title": "Blockers", "year": 2018 }, "movieFile": { "id": 2850, "relativePath": "Blockers (2018) Bluray-1080p.mkv", "path": "/data/Downloads/complete/Blockers.2018.BluRay.1080p.DTS-HD.MA.5.1.x264-LEGi0N-AsRequested/Blockers.2018.BluRay.1080p.DTS-HD.MA.5.1.x264-LEGi0N-AsRequested.mkv", "quality": "Bluray-1080p", "qualityVersion": 1, "releaseGroup": "LEGi0N", "sceneName": "Blockers.2018.BluRay.1080p.DTS-HD.MA.5.1.x264-LEGi0N-AsRequested", "indexerFlags": "0", "size": 12568531076, "dateAdded": "2023-07-03T19:28:32.741575Z", "mediaInfo": { "audioChannels": 5.1, "audioCodec": "DTS-HD MA", "audioLanguages": [ "eng" ], "height": 800, "width": 1920, "subtitles": [ "eng" ], "videoCodec": "x264", "videoDynamicRange": "", "videoDynamicRangeType": "" } }, "isUpgrade": false, "downloadClient": "sabnzbd", "downloadClientType": "SABnzbd", "downloadId": "SABnzbd_nzo_spb4z0dx", "customFormatInfo": { "customFormats": [], "customFormatScore": 0 }, "release": { "releaseTitle": "Blockers.2018.BluRay.1080p.DTS-HD.MA.5.1.x264-LEGi0N-AsRequested", "indexer": "nzbgeek", "size": 13749100000 }, "eventType": "Download", "instanceName": "Radarr", "applicationUrl": "" }`,
+			Want: "Radarr: \"Blockers\" - Download\n",
 		},
 		"readarr": {
-			Have: ``,
-			Want: "",
+			Have: `{ "author": { "id": 157, "name": "Steven Brust", "path": "/data/Books/Steven Brust", "goodreadsId": "27704" }, "books": [ { "id": 23128, "goodreadsId": "95912760", "title": "Tsalmoth", "edition": { "title": "Tsalmoth", "goodreadsId": "60820532", "asin": "B09XL5FXZ3" }, "releaseDate": "2023-04-25T04:00:00Z" } ], "release": { "quality": "EPUB", "qualityVersion": 1, "releaseTitle": "Steven Brust - Tsalmoth (epub)", "indexer": "nzbgeek", "size": 592000, "customFormatScore": 0, "customFormats": [] }, "downloadClient": "sabnzbd", "downloadClientType": "SABnzbd", "downloadId": "SABnzbd_nzo_fjf_tdta", "eventType": "Grab", "instanceName": "Readarr" }`,
+			Want: "Readarr: Steven Brust - \"Tsalmoth\" - Grab\n",
 		},
 		"update": {
-			Have: ``,
-			Want: "",
-		},
-		"gcp update": {
-			Have: `{"deployed": "writing", "image": "gcr.io/icco-cloud/writing:4884a292f0571d18ea62e84d22e53884fde47bf8"}`,
-			Want: "deployed: writing\nimage: gcr.io/icco-cloud/writing:4884a292f0571d18ea62e84d22e53884fde47bf8\n",
+			Have: `{"deployed": "relay", "image": "gcr.io/icco-cloud/relay:0fd7bb0ecd170b145417563156e8ab77eb265f9e"}`,
+			Want: `Deployed: "relay" -> "gcr.io/icco-cloud/relay:0fd7bb0ecd170b145417563156e8ab77eb265f9e"`,
 		},
 	}
 
