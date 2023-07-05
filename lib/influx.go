@@ -34,7 +34,7 @@ type Influx struct {
 func jsonToInflux(buf []byte) DataType {
 	var data Influx
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.Warnw("decoding json to Influx", zap.Error(err))
+		log.Debugw("decoding json to Influx", zap.Error(err))
 		return nil
 	}
 	log.Debugw("Influx data decoded", "data", data)

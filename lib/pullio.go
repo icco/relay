@@ -26,7 +26,7 @@ type Pullio struct {
 func jsonToPullio(buf []byte) DataType {
 	var data Pullio
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.Warnw("decoding json to Pullio", zap.Error(err))
+		log.Debugw("decoding json to Pullio", zap.Error(err))
 		return nil
 	}
 	log.Debugw("Pullio data decoded", "data", data)

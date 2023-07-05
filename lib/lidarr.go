@@ -28,7 +28,7 @@ type Lidarr struct {
 func jsonToLidarr(buf []byte) DataType {
 	var data Lidarr
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.Warnw("decoding json to Lidarr", zap.Error(err))
+		log.Debugw("decoding json to Lidarr", zap.Error(err))
 		return nil
 	}
 	log.Debugw("Lidarr data decoded", "data", data)

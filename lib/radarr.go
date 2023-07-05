@@ -69,7 +69,7 @@ type Radarr struct {
 func jsonToRadarr(buf []byte) DataType {
 	var data Radarr
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.Warnw("decoding json to Radarr", zap.Error(err))
+		log.Debugw("decoding json to Radarr", zap.Error(err))
 		return nil
 	}
 	log.Debugw("Radarr data decoded", "data", data)

@@ -30,7 +30,7 @@ type Sonarr struct {
 func jsonToSonarr(buf []byte) DataType {
 	var data Sonarr
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.Warnw("decoding json to Sonarr", zap.Error(err))
+		log.Debugw("decoding json to Sonarr", zap.Error(err))
 		return nil
 	}
 	log.Debugw("Sonarr data decoded", "data", data)

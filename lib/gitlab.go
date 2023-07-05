@@ -75,7 +75,7 @@ type GitLabPush struct {
 func jsonToGitLabPush(buf []byte) DataType {
 	var data GitLabPush
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.Warnw("decoding json to GitLabPush", zap.Error(err))
+		log.Debugw("decoding json to GitLabPush", zap.Error(err))
 		return nil
 	}
 	log.Debugw("GitLabPush data decoded", "data", data)

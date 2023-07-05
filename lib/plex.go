@@ -121,7 +121,7 @@ type Plex struct {
 func jsonToPlex(buf []byte) DataType {
 	var data Plex
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.Warnw("decoding json to Plex", zap.Error(err))
+		log.Debugw("decoding json to Plex", zap.Error(err))
 		return nil
 	}
 	log.Debugw("Plex data decoded", "data", data)

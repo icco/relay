@@ -45,7 +45,7 @@ type Readarr struct {
 func jsonToReadarr(buf []byte) DataType {
 	var data Readarr
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.Warnw("decoding json to Readarr", zap.Error(err))
+		log.Debugw("decoding json to Readarr", zap.Error(err))
 		return nil
 	}
 	log.Debugw("Readarr data decoded", "data", data)

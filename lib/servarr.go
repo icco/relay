@@ -18,7 +18,7 @@ type Servarr struct {
 func jsonToServarr(buf []byte) DataType {
 	var data Servarr
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.Warnw("decoding json to Servarr", zap.Error(err))
+		log.Debugw("decoding json to Servarr", zap.Error(err))
 		return nil
 	}
 	log.Debugw("Servarr data decoded", "data", data)

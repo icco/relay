@@ -61,7 +61,7 @@ type GoogleCloud struct {
 func jsonToGoogleCloud(buf []byte) DataType {
 	var data GoogleCloud
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.Warnw("decoding json to GoogleCloud", zap.Error(err))
+		log.Debugw("decoding json to GoogleCloud", zap.Error(err))
 		return nil
 	}
 	log.Debugw("GoogleCloud data decoded", "data", data)
@@ -149,7 +149,7 @@ type GCBBuildResource struct {
 func jsonToGoogleCloudBuild(buf []byte) DataType {
 	var data GoogleCloudBuild
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.Warnw("decoding json to GoogleCloudBuild", zap.Error(err))
+		log.Debugw("decoding json to GoogleCloudBuild", zap.Error(err))
 		return nil
 	}
 	log.Debugw("GoogleCloudBuild data decoded", "data", data)
@@ -161,12 +161,12 @@ func jsonToGoogleCloudBuild(buf []byte) DataType {
 func (j *GoogleCloudBuild) Message() string {
 	data, err := base64.StdEncoding.DecodeString(j.Msg.Data)
 	if err != nil {
-		log.Warnw("could not decode base64 data", zap.Error(err), "data", j.Msg.Data)
+		log.Debugw("could not decode base64 data", zap.Error(err), "data", j.Msg.Data)
 		return ""
 	}
 	var sub GCBBuildResource
 	if err := json.Unmarshal(data, &sub); err != nil {
-		log.Warnw("decoding json to GoogleCloudBuild Sub", zap.Error(err))
+		log.Debugw("decoding json to GoogleCloudBuild Sub", zap.Error(err))
 		return ""
 	}
 
@@ -199,7 +199,7 @@ type DeployMessage struct {
 func jsonToDeployMessage(buf []byte) DataType {
 	var data DeployMessage
 	if err := json.Unmarshal(buf, &data); err != nil {
-		log.Warnw("decoding json to DeployMessage", zap.Error(err))
+		log.Debugw("decoding json to DeployMessage", zap.Error(err))
 		return nil
 	}
 	log.Debugw("DeployMessage data decoded", "data", data)
