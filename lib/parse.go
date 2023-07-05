@@ -14,6 +14,7 @@ var (
 		jsonToSonarr,
 		jsonToLidarr,
 		jsonToReadarr,
+		jsonToRadarr,
 		jsonToGoogleCloud,
 		jsonToGoogleCloudBuild,
 		jsonToPlex,
