@@ -94,60 +94,65 @@ func main() {
 		w.Write([]byte("hi."))
 	})
 
-	r.Post("/hook", func(w http.ResponseWriter, r *http.Request) {
-		ct := r.Header.Get("content-type")
-		log.Debugw("got content-type", "content-type", ct)
+	r.Post("/hook", hookHandler)
 
-		buf, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			log.Errorw("could not read buffer", zap.Error(err))
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
+	log.Fatal(http.ListenAndServe(":"+port, r))
+}
 
-		rdr2 := ioutil.NopCloser(bytes.NewBuffer(buf))
-		r.Body = rdr2
-		defer r.Body.Close()
+func hookHandler(w http.ResponseWriter, r *http.Request) {
+	ct := r.Header.Get("content-type")
+	log.Debugw("got content-type", "content-type", ct)
 
-		var msg string
-		switch ct {
-		case "application/json":
-			msg = lib.BufferToMessage(buf)
-		case "plain/text":
-			msg = string(buf)
-		default:
-			err := r.ParseMultipartForm(int64(20 * units.Megabyte))
-			if err != nil {
-				log.Errorw("could not parse form", "body", string(buf), zap.Error(err))
-				http.Error(w, err.Error(), 500)
-				return
-			}
-			parts := strings.Split(ct, ";")
-			log.Debugw("parsing form", "parts", parts)
-			if len(parts) >= 1 && parts[0] == "multipart/form-data" {
-				val := r.FormValue("payload")
-				log.Debugw("attempting form parse", "payload", val)
-				msg = lib.BufferToMessage([]byte(val))
-			}
-		}
+	buf, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Errorw("could not read buffer", zap.Error(err))
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-		// Generates a 200, but log a warning, because this shouldn't happen too often.
-		if msg == "" {
-			log.Warnw("empty message generated", "body", string(buf))
-			w.Write([]byte(""))
-			return
-		}
+	rdr2 := ioutil.NopCloser(bytes.NewBuffer(buf))
+	r.Body = rdr2
+	defer r.Body.Close()
 
-		if err := messageCreate(dg, msg); err != nil {
-			log.Errorw("could not send message", zap.Error(err))
+	var msg string
+	var parseMethod string
+	switch ct {
+	case "application/json":
+		parseMethod = "json"
+		msg = lib.BufferToMessage(buf)
+	case "plain/text":
+		parseMethod = "plaintext"
+		msg = string(buf)
+	default:
+		parseMethod = "form"
+		if err := r.ParseMultipartForm(int64(20 * units.Megabyte)); err != nil {
+			log.Errorw("could not parse form", "body", string(buf), zap.Error(err))
 			http.Error(w, err.Error(), 500)
 			return
 		}
+		parts := strings.Split(ct, ";")
+		log.Debugw("parsing form", "parts", parts)
+		if len(parts) >= 1 && parts[0] == "multipart/form-data" {
+			val := r.FormValue("payload")
+			log.Debugw("attempting form parse", "payload", val)
+			msg = lib.BufferToMessage([]byte(val))
+		}
+	}
 
+	// Generate a 200 but sends no message
+	if msg == "" {
+		log.Infow("empty message generated", "body", string(buf), "parseMethod", parseMethod)
 		w.Write([]byte(""))
-	})
+		return
+	}
 
-	log.Fatal(http.ListenAndServe(":"+port, r))
+	if err := messageCreate(dg, msg); err != nil {
+		log.Errorw("could not send message", zap.Error(err))
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	w.Write([]byte(""))
 }
 
 func messageCreate(s *discordgo.Session, m string) error {
