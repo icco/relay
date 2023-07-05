@@ -87,6 +87,26 @@ func TestParse(t *testing.T) {
 			Have: `{"message":{"attributes":{"buildId":"04bf65f0-8152-4771-900f-17fd7757b607","status":"WORKING"},"data":"ewogICJpZCI6ICIwNGJmNjVmMC04MTUyLTQ3NzEtOTAwZi0xN2ZkNzc1N2I2MDciLAogICJzdGF0dXMiOiAiV09SS0lORyIsCiAgInNvdXJjZSI6IHsKICB9LAogICJjcmVhdGVUaW1lIjogIjIwMjEtMDQtMDNUMDM6MDU6NDMuOTY5NzMwOTI5WiIsCiAgInN0YXJ0VGltZSI6ICIyMDIxLTA0LTAzVDAzOjA1OjQ1LjM0MDk1OTk1MFoiLAogICJzdGVwcyI6IFt7CiAgICAibmFtZSI6ICJnY3IuaW8vY2xvdWQtYnVpbGRlcnMvZG9ja2VyIiwKICAgICJhcmdzIjogWyJidWlsZCIsICItdCIsICJnY3IuaW8vaWNjby1jbG91ZC9yZXBvcnRkOjQxNDk1OGEzMzYzYmNlMWJkZmJjNTUzYmUzYmJkN2VkZGRhZDFiODciLCAiLWYiLCAiRG9ja2VyZmlsZSIsICIuIl0KICB9XSwKICAidGltZW91dCI6ICI2MDBzIiwKICAiaW1hZ2VzIjogWyJnY3IuaW8vaWNjby1jbG91ZC9yZXBvcnRkOjQxNDk1OGEzMzYzYmNlMWJkZmJjNTUzYmUzYmJkN2VkZGRhZDFiODciXSwKICAicHJvamVjdElkIjogImljY28tY2xvdWQiLAogICJsb2dzQnVja2V0IjogImdzOi8vOTQwMzgwMTU0NjIyLmNsb3VkYnVpbGQtbG9ncy5nb29nbGV1c2VyY29udGVudC5jb20iLAogICJidWlsZFRyaWdnZXJJZCI6ICI1N2RkYzUzOC0wMmE3LTQ2ZjMtODYyMS02MjY4OTBjNDZlZGEiLAogICJvcHRpb25zIjogewogICAgInN1YnN0aXR1dGlvbk9wdGlvbiI6ICJBTExPV19MT09TRSIsCiAgICAibG9nZ2luZyI6ICJMRUdBQ1kiLAogICAgImR5bmFtaWNTdWJzdGl0dXRpb25zIjogdHJ1ZQogIH0sCiAgImxvZ1VybCI6ICJodHRwczovL2NvbnNvbGUuY2xvdWQuZ29vZ2xlLmNvbS9jbG91ZC1idWlsZC9idWlsZHMvMDRiZjY1ZjAtODE1Mi00NzcxLTkwMGYtMTdmZDc3NTdiNjA3P3Byb2plY3RcdTAwM2Q5NDAzODAxNTQ2MjIiLAogICJzdWJzdGl0dXRpb25zIjogewogICAgIlJFUE9fTkFNRSI6ICJyZXBvcnRkIiwKICAgICJSRVZJU0lPTl9JRCI6ICI0MTQ5NThhMzM2M2JjZTFiZGZiYzU1M2JlM2JiZDdlZGRkYWQxYjg3IiwKICAgICJDT01NSVRfU0hBIjogIjQxNDk1OGEzMzYzYmNlMWJkZmJjNTUzYmUzYmJkN2VkZGRhZDFiODciLAogICAgIlNIT1JUX1NIQSI6ICI0MTQ5NThhIiwKICAgICJCUkFOQ0hfTkFNRSI6ICJtYXN0ZXIiCiAgfSwKICAidGFncyI6IFsidHJpZ2dlci01N2RkYzUzOC0wMmE3LTQ2ZjMtODYyMS02MjY4OTBjNDZlZGEiXSwKICAiYXJ0aWZhY3RzIjogewogICAgImltYWdlcyI6IFsiZ2NyLmlvL2ljY28tY2xvdWQvcmVwb3J0ZDo0MTQ5NThhMzM2M2JjZTFiZGZiYzU1M2JlM2JiZDdlZGRkYWQxYjg3Il0KICB9LAogICJxdWV1ZVR0bCI6ICIzNjAwcyIsCiAgIm5hbWUiOiAicHJvamVjdHMvOTQwMzgwMTU0NjIyL2xvY2F0aW9ucy9nbG9iYWwvYnVpbGRzLzA0YmY2NWYwLTgxNTItNDc3MS05MDBmLTE3ZmQ3NzU3YjYwNyIKfQ==","messageId":"2229909757575397","message_id":"2229909757575397","publishTime":"2021-04-03T03:05:46.886Z","publish_time":"2021-04-03T03:05:46.886Z"},"subscription":"projects/icco-cloud/subscriptions/builds"}`,
 			Want: "",
 		},
+		"plex album": {
+			Have: `{"event":"library.new","user":true,"owner":true,"Account":{"id":639131,"thumb":"https://plex.tv/users/b921c1a7580bf543/avatar?c=1662304482","title":"icco"},"Server":{"title":"storm","uuid":"544b62f0b4f85d5d8f2c91696763d13578f5264a"},"Metadata":{"librarySectionType":"artist","ratingKey":"239918","key":"/library/metadata/239918/children","parentRatingKey":"220417","guid":"local://239918","parentGuid":"plex://artist/5d07bbfd403c6402904a6579","type":"album","title":"Grave Diggers: Tom Waits","parentKey":"/library/metadata/220417","librarySectionTitle":"Music","librarySectionID":3,"librarySectionKey":"/library/sections/3","parentTitle":"Tom Waits","summary":"","index":1,"year":2022,"thumb":"/library/metadata/239918/thumb/1684767305","art":"/library/metadata/220417/art/1684748132","parentThumb":"/library/metadata/220417/thumb/1684748132","originallyAvailableAt":"2022-01-01","leafCount":6,"viewedLeafCount":0,"addedAt":1684767304,"updatedAt":1684767305,"Genre":[{"id":493305,"filter":"genre=493305","tag":"Rock"}]}}`,
+			Want: "Plex: \"library.new\" - Grave Diggers: Tom Waits by Tom Waits\n",
+		},
+		"radarr": {
+			Have: ``,
+			Want: "",
+		},
+		"readarr": {
+			Have: ``,
+			Want: "",
+		},
+		"update": {
+			Have: ``,
+			Want: "",
+		},
+		"gcp update": {
+			Have: `{"deployed": "writing", "image": "gcr.io/icco-cloud/writing:4884a292f0571d18ea62e84d22e53884fde47bf8"}`,
+			Want: "deployed: writing\nimage: gcr.io/icco-cloud/writing:4884a292f0571d18ea62e84d22e53884fde47bf8\n",
+		},
 	}
 
 	for name, tc := range tests {
