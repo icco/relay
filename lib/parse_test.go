@@ -22,24 +22,7 @@ func TestParse(t *testing.T) {
 			Want: "GCB: SUCCESS [gcr.io/icco-cloud/locative.garden:latest gcr.io/icco-cloud/locative.garden:7ef7ee675215ccd0807310c01dccfce3ee29510d] @ <https://console.cloud.google.com/cloud-build/builds/3b34ea43-928e-4b32-95c6-47f47c683d5e?project=940380154622>",
 		},
 		"sonarr": {
-			Have: `{
-  "episodes": [
-    {
-      "id": 123,
-      "episodeNumber": 1,
-      "seasonNumber": 1,
-      "title": "Test title",
-      "qualityVersion": 0
-    }
-  ],
-  "eventType": "Test",
-  "series": {
-    "id": 1,
-    "title": "Test Title",
-    "path": "C:\\testpath",
-    "tvdbId": 1234
-  }
-}`,
+			Have: `{ "episodes": [ { "id": 123, "episodeNumber": 1, "seasonNumber": 1, "title": "Test title", "qualityVersion": 0 } ], "eventType": "Test", "series": { "id": 1, "title": "Test Title", "path": "C:\\testpath", "tvdbId": 1234 } }`,
 			Want: "Sonarr: Test Title 1x01 - \"Test\"\n",
 		},
 		"simple": {
@@ -47,22 +30,7 @@ func TestParse(t *testing.T) {
 			Want: "hi: xyz\ntest: bar\n",
 		},
 		"lidarr": {
-			Have: `{
-  "albums": [
-    {
-      "id": 123,
-      "title": "Test title",
-      "qualityVersion": 0
-    }
-  ],
-  "eventType": "Test",
-  "artist": {
-    "id": 1,
-    "name": "Test Name",
-    "path": "C:\\testpath",
-    "mbId": "aaaaa-aaa-aaaa-aaaaaa"
-  }
-}`,
+			Have: `{ "albums": [ { "id": 123, "title": "Test title", "qualityVersion": 0 } ], "eventType": "Test", "artist": { "id": 1, "name": "Test Name", "path": "C:\\testpath", "mbId": "aaaaa-aaa-aaaa-aaaaaa" } }`,
 			Want: "Lidarr: Test Name - \"Test title\" - Test\n",
 		},
 		"plex TV Episode": {
