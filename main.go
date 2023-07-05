@@ -139,6 +139,9 @@ func hookHandler(dg *discordgo.Session) http.HandlerFunc {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 			msg = lib.BufferToMessage(str)
+		case "":
+			http.Error(w, "empty content type recieved", http.StatusBadRequest)
+			return
 		default:
 			parseMethod = "form"
 			if err := r.ParseMultipartForm(int64(20 * units.Megabyte)); err != nil {
