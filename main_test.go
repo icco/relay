@@ -27,12 +27,12 @@ func TestHookHandler(t *testing.T) {
 		"form": {},
 	}
 
-	for _, tc := range tt {
-		t.Run(tc.name, func(t *testing.T) {
-			request := httptest.NewRequest(http.MethodPost, "/hook", nil)
+	for name, tc := range tt {
+		t.Run(name, func(t *testing.T) {
+			request := httptest.NewRequest(http.MethodPost, "/hook", strings.NewReader(tc.body))
 			responseRecorder := httptest.NewRecorder()
 
-			hookHandler(responseRecorder, request)
+			hookHandler(nil)(responseRecorder, request)
 
 			if responseRecorder.Code != http.StatusOK {
 				t.Errorf("Want status '%d', got '%d'", http.StatusOK, responseRecorder.Code)
