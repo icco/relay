@@ -64,8 +64,8 @@ func TestParse(t *testing.T) {
 			Want: "",
 		},
 		"readarr": {
-			Have: ` { "author": { "id": 157, "name": "Steven Brust", "path": "/data/Books/Steven Brust", "goodreadsId": "27704" }, "books": [ { "id": 23128, "goodreadsId": "95912760", "title": "Tsalmoth", "edition": { "title": "Tsalmoth", "goodreadsId": "60820532", "asin": "B09XL5FXZ3" }, "releaseDate": "2023-04-25T04:00:00Z" } ], "release": { "quality": "EPUB", "qualityVersion": 1, "releaseTitle": "Steven Brust - Tsalmoth (epub)", "indexer": "nzbgeek", "size": 592000, "customFormatScore": 0, "customFormats": [] }, "downloadClient": "sabnzbd", "downloadClientType": "SABnzbd", "downloadId": "SABnzbd_nzo_fjf_tdta", "eventType": "Grab", "instanceName": "Readarr" } `,
-			Want: "",
+			Have: `{ "author": { "id": 157, "name": "Steven Brust", "path": "/data/Books/Steven Brust", "goodreadsId": "27704" }, "books": [ { "id": 23128, "goodreadsId": "95912760", "title": "Tsalmoth", "edition": { "title": "Tsalmoth", "goodreadsId": "60820532", "asin": "B09XL5FXZ3" }, "releaseDate": "2023-04-25T04:00:00Z" } ], "release": { "quality": "EPUB", "qualityVersion": 1, "releaseTitle": "Steven Brust - Tsalmoth (epub)", "indexer": "nzbgeek", "size": 592000, "customFormatScore": 0, "customFormats": [] }, "downloadClient": "sabnzbd", "downloadClientType": "SABnzbd", "downloadId": "SABnzbd_nzo_fjf_tdta", "eventType": "Grab", "instanceName": "Readarr" }`,
+			Want: "Readarr: Steven Brust - \"Tsalmoth\" - Grab\n",
 		},
 		"update": {
 			Have: `{"deployed": "relay", "image": "gcr.io/icco-cloud/relay:0fd7bb0ecd170b145417563156e8ab77eb265f9e"}`,
