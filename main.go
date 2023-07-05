@@ -142,7 +142,13 @@ func hookHandler(dg *discordgo.Session) http.HandlerFunc {
 
 		// Generate a 200 but sends no message
 		if msg == "" {
-			log.Infow("empty message generated", "body", string(buf), "parseMethod", parseMethod)
+			log.Infow("empty message generated", "body", string(buf), "parseMethod", parseMethod, "contentType", ct)
+			w.Write([]byte(""))
+			return
+		}
+
+		if dg == nil {
+			log.Errorw("discord session is nil")
 			w.Write([]byte(""))
 			return
 		}
@@ -154,6 +160,7 @@ func hookHandler(dg *discordgo.Session) http.HandlerFunc {
 		}
 
 		w.Write([]byte(""))
+		return
 	}
 }
 
