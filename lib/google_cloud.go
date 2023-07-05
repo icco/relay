@@ -190,3 +190,29 @@ func (j *GoogleCloudBuild) Valid() bool {
 
 	return j.Subscription != "" && j.Msg.Data != "" && send
 }
+
+type DeployMessage struct {
+	Deployed string `json:"deployed"`
+	Image    string `json:"image"`
+}
+
+func jsonToDeployMessage(buf []byte) DataType {
+	var data DeployMessage
+	if err := json.Unmarshal(buf, &data); err != nil {
+		log.Warnw("decoding json to DeployMessage", zap.Error(err))
+		return nil
+	}
+	log.Debugw("DeployMessage data decoded", "data", data)
+
+	return &data
+}
+
+// Message returns a string representation of this object for human consumption.
+func (j *DeployMessage) Message() string {
+	return fmt.Sprintf("Deploy: %q -> %q", j.Deployed, j.Image)
+}
+
+// Valid checks that the data is good.
+func (j *DeployMessage) Valid() bool {
+	return j.Deploy != "" && j.Image != ""
+}
