@@ -33,5 +33,6 @@ func (j *Servarr) Message() string {
 
 // Valid checks that the data is good.
 func (j *Servarr) Valid() bool {
-	return j.EventType == "ApplicationUpdate" && j.EventMessage != "" && j.InstanceName != ""
+	event := j.EventType == "ApplicationUpdate" || j.EventType == "Health"
+	return event && j.EventMessage != "" && j.InstanceName != ""
 }
