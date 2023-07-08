@@ -131,6 +131,14 @@ func jsonToPlex(buf []byte) DataType {
 
 // Message returns a string representation of this object for human consumption.
 func (j *Plex) Message() string {
+	if j.Event == "admin.database.backup" {
+		return fmt.Sprintf("Plex: %q - %s\n", j.Event, j.Server.Title)
+	}
+
+	if j.Event == "device.new" {
+		return fmt.Sprintf("Plex: %q - %s\n", j.Event, j.Player.Title)
+	}
+
 	switch j.Metadata.Type {
 	case "episode":
 		return fmt.Sprintf("Plex: %q - %s %dx%d\n", j.Event, j.Metadata.GrandparentTitle, j.Metadata.ParentIndex, j.Metadata.Index)
@@ -140,9 +148,11 @@ func (j *Plex) Message() string {
 		return fmt.Sprintf("Plex: %q - %s\n", j.Event, j.Metadata.Title)
 	case "album":
 		return fmt.Sprintf("Plex: %q - %s by %s\n", j.Event, j.Metadata.Title, j.Metadata.ParentTitle)
-	default:
-		return fmt.Sprintf("Plex: %q - unknown type %q\n", j.Event, j.Metadata.Type)
+	case "artist":
+		return fmt.Sprintf("Plex: %q - %s\n", j.Event, j.Metadata.Title)
 	}
+
+	return fmt.Sprintf("Plex: %q - unknown metadata type %q\n", j.Event, j.Metadata.Type)
 }
 
 // Valid checks that the data is good.
