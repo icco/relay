@@ -53,10 +53,10 @@ func main() {
 		log.Errorw("could not init opentelemetry", zap.Error(err))
 	}
 
-	dbUser := ("DB_USER")                               // e.g. 'my-db-user'
-	dbPwd := os.Getenv("DB_PASS")                       // e.g. 'my-db-password'
-	unixSocketPath := os.Getenv("DATABASE_UNIX_SOCKET") // e.g. '/cloudsql/project:region:instance'
-	dbName := os.Getenv("DB_NAME")                      // e.g. 'my-database'
+	dbUser := ("DB_USER")                         // e.g. 'my-db-user'
+	dbPwd := os.Getenv("DB_PASS")                 // e.g. 'my-db-password'
+	unixSocketPath := os.Getenv("DB_UNIX_SOCKET") // e.g. '/cloudsql/project:region:instance'
+	dbName := os.Getenv("DB_NAME")                // e.g. 'my-database'
 
 	dbURI := fmt.Sprintf("user=%s password=%s database=%s host=%s", dbUser, dbPwd, dbName, unixSocketPath)
 
