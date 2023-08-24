@@ -22,7 +22,7 @@ import (
 	"github.com/icco/relay/lib"
 	"go.uber.org/zap"
 
-	_ "github.com/lib/pq"
+	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
 const (
@@ -53,7 +53,14 @@ func main() {
 		log.Errorw("could not init opentelemetry", zap.Error(err))
 	}
 
-	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	dbUser := ("DB_USER")                               // e.g. 'my-db-user'
+	dbPwd := os.Getenv("DB_PASS")                       // e.g. 'my-db-password'
+	unixSocketPath := os.Getenv("DATABASE_UNIX_SOCKET") // e.g. '/cloudsql/project:region:instance'
+	dbName := os.Getenv("DB_NAME")                      // e.g. 'my-database'
+
+	dbURI := fmt.Sprintf("user=%s password=%s database=%s host=%s", dbUser, dbPwd, dbName, unixSocketPath)
+
+	db, err := sql.Open("pgx", dbURI)
 	if err != nil {
 		log.Fatalw("cannot connect to database server", zap.Error(err))
 	}
