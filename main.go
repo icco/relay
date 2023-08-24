@@ -74,7 +74,7 @@ func main() {
 	dg.AddHandler(messageRecieve(db))
 
 	if err := dg.Open(); err != nil {
-		log.Fatalw("error opening connection", zap.Error(err))
+		log.Fatalw("error opening discord connection", zap.Error(err))
 	}
 	defer dg.Close()
 
