@@ -8,7 +8,10 @@ ENV PRANA_LOG_FORMAT="json"
 RUN apk add --no-cache git make g++ ca-certificates
 
 WORKDIR /go/src/github.com/icco/relay
-COPY . .
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . ./
 
 RUN go get github.com/phogolabs/prana/cmd/prana
 RUN go build -o /go/bin/relay .
