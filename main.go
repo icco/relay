@@ -95,6 +95,10 @@ func main() {
 		w.Write([]byte("hi."))
 	})
 
+	r.Get("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("hi."))
+	})
+
 	r.Post("/hook", hookHandler(dg))
 
 	log.Fatal(http.ListenAndServe(":"+port, r))
