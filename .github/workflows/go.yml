@@ -49,5 +49,5 @@ jobs:
         run: go test -v ./...
         env:
           PORT: "8080"
-          DATABASE_URL: "postgres://localhost/relay?sslmode=disable"
+          DATABASE_URL: "postgres://postgres:postgres@localhost/relay?sslmode=disable"
           DISCORD_TOKEN: fake
