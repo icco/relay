@@ -9,7 +9,7 @@ import (
 
 	"github.com/alecthomas/units"
 	"github.com/bwmarrin/discordgo"
-	"github.com/icco/relay/lib"
+	"github.com/icco/relay/parse"
 	"go.uber.org/zap"
 )
 
@@ -44,7 +44,7 @@ func hookHandler(dg *discordgo.Session) http.HandlerFunc {
 		switch ct {
 		case "application/json":
 			parseMethod = "json"
-			msg = lib.BufferToMessage(buf)
+			msg = parse.BufferToMessage(buf)
 		case "plain/text":
 			parseMethod = "plaintext"
 			msg = string(buf)
@@ -61,7 +61,7 @@ func hookHandler(dg *discordgo.Session) http.HandlerFunc {
 				log.Errorw("could not marshal values", "body", string(buf), "values", values, zap.Error(err))
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
-			msg = lib.BufferToMessage(str)
+			msg = parse.BufferToMessage(str)
 		case "":
 			http.Error(w, "empty content type recieved", http.StatusBadRequest)
 			return
@@ -77,7 +77,7 @@ func hookHandler(dg *discordgo.Session) http.HandlerFunc {
 			if len(parts) >= 1 && parts[0] == "multipart/form-data" {
 				val := r.FormValue("payload")
 				log.Debugw("attempting form parse", "payload", val)
-				msg = lib.BufferToMessage([]byte(val))
+				msg = parse.BufferToMessage([]byte(val))
 			}
 		}
 

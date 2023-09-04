@@ -6,7 +6,7 @@ import (
 
 	"cirello.io/pglock"
 	"github.com/bwmarrin/discordgo"
-	"github.com/icco/relay/lib"
+	"github.com/icco/relay/database/model"
 	"go.uber.org/zap"
 )
 
@@ -64,7 +64,7 @@ func messageRecieve(db *sql.DB) func(s *discordgo.Session, m *discordgo.MessageC
 			return
 		}
 
-		c, err := lib.GetLockClient(db)
+		c, err := model.GetLockClient(db)
 		if err != nil {
 			log.Errorw("getting lock client", zap.Error(err))
 			return
