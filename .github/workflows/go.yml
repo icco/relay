@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     # Docker Hub image that `container-job` executes in
     container: ubuntu-latest
+    credentials:
+      username: ${{ secrets.DOCKERHUB_USERNAME }}
+      password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     # Service containers to run with `container-job`
     services:
@@ -15,6 +18,9 @@ jobs:
       postgres:
         # Docker Hub image
         image: postgres
+        credentials:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: postgres
