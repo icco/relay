@@ -81,10 +81,13 @@ func hookHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Generate a 200 but sends no message
-	if msg == "" {
-		log.Infow("empty message generated", "body", string(buf), "parseMethod", parseMethod, "contentType", ct)
-		w.Write([]byte(""))
+	m := &model.Message{
+		Content: msg,
+		Message: map[string]string{}, // TODO: Actually save raw json
+	}
+	if err := m.Save(); err != nil {
+		log.Errorw("could not save message", zap.Error(err))
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
