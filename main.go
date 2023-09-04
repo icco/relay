@@ -81,12 +81,12 @@ func main() {
 	r.Use(crs.Handler)
 
 	r.Get("/", healthcheckHandler)
-
 	r.Get("/healthz", healthcheckHandler)
-
 	r.Get("/healthcheck", healthcheckHandler)
 
-	r.Post("/hook", hookHandler(dg))
+	r.Post("/hook", hookHandler)
+
+	r.Post("/cron", cronHandler(dg))
 
 	log.Fatal(http.ListenAndServe(":"+port, r))
 }
