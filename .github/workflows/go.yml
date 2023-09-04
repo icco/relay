@@ -25,6 +25,7 @@ jobs:
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: relay
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
@@ -44,6 +45,11 @@ jobs:
 
       - name: Build
         run: go build -buildvcs=false -v ./...
+
+      - name: Migrate
+        run: go get github.com/phogolabs/prana/cmd/prana && go run github.com/phogolabs/prana/cmd/prana -- migration run
+        env:
+          PRANA_DB_URL: "postgres://postgres:postgres@localhost/relay?sslmode=disable"
 
       - name: Test
         run: go test -v ./...
