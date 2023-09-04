@@ -34,7 +34,7 @@ jobs:
 
     steps:
       - run: apt update
-      - run: apt -y install ca-certificates curl
+      - run: apt -y install ca-certificates curl git
       - uses: actions/checkout@v3
 
       - name: Set up Go
