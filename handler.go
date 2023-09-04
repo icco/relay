@@ -13,7 +13,15 @@ import (
 	"go.uber.org/zap"
 )
 
-const ()
+func healthcheckHandler(w http.ResponseWriter, r *http.Request) {
+	out := map[string]string{"status": "ok"}
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(out); err != nil {
+		log.Errorw("could not encode json", zap.Error(err))
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
 
 func hookHandler(dg *discordgo.Session) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

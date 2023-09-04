@@ -80,17 +80,11 @@ func main() {
 	})
 	r.Use(crs.Handler)
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("hi."))
-	})
+	r.Get("/", healthcheckHandler)
 
-	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("hi."))
-	})
+	r.Get("/healthz", healthcheckHandler)
 
-	r.Get("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("hi."))
-	})
+	r.Get("/healthcheck", healthcheckHandler)
 
 	r.Post("/hook", hookHandler(dg))
 
