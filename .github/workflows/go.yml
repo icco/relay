@@ -49,11 +49,11 @@ jobs:
       - name: Migrate
         run: go get github.com/phogolabs/prana/cmd/prana && go run github.com/phogolabs/prana/cmd/prana -- migration run
         env:
-          PRANA_DB_URL: "postgres://postgres:postgres@localhost/relay?sslmode=disable"
+          PRANA_DB_URL: "postgres://postgres:postgres@postgres/relay?sslmode=disable"
 
       - name: Test
         run: go test -v ./...
         env:
           PORT: "8080"
-          DATABASE_URL: "postgres://postgres:postgres@localhost/relay?sslmode=disable"
+          DATABASE_URL: "postgres://postgres:postgres@postgres/relay?sslmode=disable"
           DISCORD_TOKEN: fake
