@@ -2,8 +2,7 @@
 -- Please do not change the name attributes
 
 -- name: up
-ALTER TABLE `messages` ADD `content` TEXT NOT NULL DEFAULT '' ;
+ALTER TABLE messages ADD COLUMN content TEXT NOT NULL;
 
 -- name: down
-ALTER TABLE `messages` DROP `content` ;
-
+ALTER TABLE messages DROP COLUMN content;
