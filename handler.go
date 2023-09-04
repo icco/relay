@@ -83,6 +83,7 @@ func hookHandler(w http.ResponseWriter, r *http.Request) {
 
 	m := &model.Message{
 		Content:   msg,
+		Message:   []byte("{}"),
 		Published: false,
 	}
 
