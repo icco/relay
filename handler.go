@@ -82,17 +82,17 @@ func hookHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	m := &model.Message{
-		Content: msg,
-		Message: map[string]string{}, // TODO: Actually save raw json
+		Content:   msg,
+		Published: false,
 	}
-	if err := m.Save(); err != nil {
-		log.Errorw("could not save message", zap.Error(err))
+
+	if err := m.Create(); err != nil {
+		log.Errorw("could not save message", "parse_method", parseMethod, zap.Error(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.Write([]byte(""))
-	return
 }
 
 func cronHandler(dg *discordgo.Session) http.HandlerFunc {

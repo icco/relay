@@ -5,8 +5,13 @@ import (
 	"os"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/icco/gutil/logging"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+)
+
+var (
+	log = logging.Must(logging.NewLogger("relay"))
 )
 
 // OpenDatabase opens a connection to the database using the DATABASE_URL
@@ -40,6 +45,7 @@ func (m *Message) Send(dg *discordgo.Session) error {
 	if err := messageCreate(dg, m.Content); err != nil {
 		return err
 	}
+	log.Debugw("message sent", "message", m)
 
 	db, err := OpenDatabase()
 	if err != nil {
