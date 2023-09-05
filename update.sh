@@ -2,6 +2,7 @@
 
 set -ex
 
+go get github.com/phogolabs/prana/cmd/prana
 export PRANA_DB_URL=${DATABASE_URL}
 go run github.com/phogolabs/prana/cmd/prana -- migration run
 go run github.com/phogolabs/prana/cmd/prana -- model sync
