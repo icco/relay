@@ -69,7 +69,7 @@ func TestParse(t *testing.T) {
 		},
 		"update": {
 			Have: `{"deployed": "relay", "image": "gcr.io/icco-cloud/relay:0fd7bb0ecd170b145417563156e8ab77eb265f9e"}`,
-			Want: "Deployed: \"relay\" -> \"gcr.io/icco-cloud/relay:0fd7bb0ecd170b145417563156e8ab77eb265f9e\n\"",
+			Want: "Deployed: \"relay\" -> \"gcr.io/icco-cloud/relay:0fd7bb0ecd170b145417563156e8ab77eb265f9e\"\n",
 		},
 		"servarr_update": {
 			Have: `{ "message": "Radarr updated from 4.5.2.7388 to 4.6.4.7568", "previousVersion": "4.5.2.7388", "newVersion": "4.6.4.7568", "eventType": "ApplicationUpdate", "instanceName": "Radarr", "applicationUrl": "" }`,
