@@ -19,6 +19,7 @@ var (
 		jsonToPullio,
 		jsonToGoogleCloud,
 		jsonToGoogleCloudBuild,
+		jsonToGCPError,
 		jsonToPlex,
 		jsonToInflux,
 		jsonToGitLabPush,
