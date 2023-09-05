@@ -71,7 +71,7 @@ func jsonToGoogleCloud(buf []byte) DataType {
 
 // Message returns a string representation of this object for human consumption.
 func (j *GoogleCloud) Message() string {
-	return fmt.Sprintf("GCP Alert\n - %q\n - %s\n - <%s>", j.Incident.Summary, j.Incident.PolicyName, j.Incident.URL)
+	return fmt.Sprintf("GCP Alert\n - %q\n - %s\n - <%s>\n", j.Incident.Summary, j.Incident.PolicyName, j.Incident.URL)
 }
 
 // Valid checks that the data is good.
@@ -170,7 +170,7 @@ func (j *GoogleCloudBuild) Message() string {
 		return ""
 	}
 
-	return fmt.Sprintf("GCB: %s %v @ <%s>", sub.Status, sub.Artifacts.Images, sub.LogURL)
+	return fmt.Sprintf("GCB: %s %v @ <%s>\n", sub.Status, sub.Artifacts.Images, sub.LogURL)
 }
 
 // Valid checks that the data is good.
@@ -209,7 +209,7 @@ func jsonToDeployMessage(buf []byte) DataType {
 
 // Message returns a string representation of this object for human consumption.
 func (j *DeployMessage) Message() string {
-	return fmt.Sprintf("Deployed: %q -> %q", j.Deployed, j.Image)
+	return fmt.Sprintf("Deployed: %q -> %q\n", j.Deployed, j.Image)
 }
 
 // Valid checks that the data is good.
@@ -253,7 +253,7 @@ func jsonToGCPError(buf []byte) DataType {
 
 // Message returns a string representation of this object for human consumption.
 func (j *GCPError) Message() string {
-	return fmt.Sprintf("GCP Error: %s: %s", j.Subject, j.GroupInfo.DetailLink)
+	return fmt.Sprintf("GCP Error: %s: %s\n", j.Subject, j.GroupInfo.DetailLink)
 }
 
 // Valid checks that the data is good.
