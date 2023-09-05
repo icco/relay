@@ -46,7 +46,7 @@ Content-Type: application/json
 	for name, tc := range tt {
 		t.Run(name, func(t *testing.T) {
 			r := chi.NewRouter()
-			r.Post("/hook", hookHandler)
+			r.Post("/hook", hookHandler(nil))
 			ts := httptest.NewServer(r)
 			defer ts.Close()
 

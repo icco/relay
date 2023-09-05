@@ -50,6 +50,7 @@ func main() {
 	if err != nil {
 		log.Fatalw("cannot connect to database server", zap.Error(err))
 	}
+	db.SetMaxOpenConns(5)
 	defer db.Close()
 
 	// Create a new Discord session using the provided bot token.
@@ -84,9 +85,9 @@ func main() {
 	r.Get("/healthz", healthcheckHandler)
 	r.Get("/healthcheck", healthcheckHandler)
 
-	r.Post("/hook", hookHandler)
+	r.Post("/hook", hookHandler(db))
 
-	r.Post("/cron", cronHandler(dg))
+	r.Post("/cron", cronHandler(dg, db))
 
 	log.Fatal(http.ListenAndServe(":"+port, r))
 }
