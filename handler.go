@@ -48,6 +48,7 @@ func hookHandler(db *sql.DB) http.HandlerFunc {
 		switch ct {
 		case "application/json":
 			parseMethod = "json"
+			raw = buf
 			msg = parse.BufferToMessage(buf)
 		case "plain/text":
 			parseMethod = "plaintext"
