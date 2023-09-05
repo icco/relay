@@ -43,7 +43,8 @@ func (m *Message) Create(ctx context.Context, db *sql.DB) error {
 		return err
 	}
 
-	result := dbo.WithContext(ctx).Where(Message{ID: m.ID}).FirstOrCreate(m)
+	result := dbo.WithContext(ctx).Create(m)
+	log.Debugw("creating message", "message", m, "result", result)
 
 	return result.Error
 }
