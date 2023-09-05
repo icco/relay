@@ -79,6 +79,10 @@ func TestParse(t *testing.T) {
 			Have: `{ "container": "sonarr", "image": "cr.hotio.dev/hotio/sonarr:v4", "avatar": "", "old_image_id": "0ce70067c46d3fe151eb1484eeefb5c676524061a8a6bd2eb3c416bab3758dd2", "new_image_id": "e08a14f44f7c0169c732b0cefdec8e67f5f3023d5621419a716ca0c9b942b384", "old_version": "4.0.0.548", "new_version": "4.0.0.551", "old_revision": "f256f1510757fd97dba24aa4d09fc99423c95023", "new_revision": "ffffc1a10022d940904d8bd18b6adea76ee51a22", "type": "update_success", "url": "", "timestamp": "2023-07-03T12:00:35.960Z" }`,
 			Want: "Pullio: updated \"sonarr\": \"4.0.0.548\" -> \"4.0.0.551\"\n",
 		},
+		"google_cloud error": {
+			Have: `{ "version": "1.0", "subject": "Resolved error has reoccurred in icco-cloud cron", "group_info" : { "project_id": "icco-cloud", "detail_link": "https://console.cloud.google.com/errors/CKulqbn-1Z_AVg?project=icco-cloud&time=P30D&utm_source=error-reporting-notification&utm_medium=webhook&utm_content=resolved-error" }, "exception_info" : { "type": "", "message": "" }, "event_info": { "log_message": "error running job", "request_method": "", "request_url": "", "referrer": "", "user_agent": "", "service": "cron", "version": "", "response_status": "0" } }`,
+			Want: "GCP Error: Resolved error has reoccurred in icco-cloud cron: https://console.cloud.google.com/errors/CKulqbn-1Z_AVg?project=icco-cloud&time=P30D&utm_source=error-reporting-notification&utm_medium=webhook&utm_content=resolved-error\n",
+		},
 	}
 
 	for name, tc := range tests {
