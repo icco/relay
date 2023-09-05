@@ -71,7 +71,7 @@ func jsonToGoogleCloud(buf []byte) DataType {
 
 // Message returns a string representation of this object for human consumption.
 func (j *GoogleCloud) Message() string {
-	return fmt.Sprintf("GCP Alert\n - %q\n - %s\n - <%s>", j.Incident.Summary, j.Incident.PolicyName, j.Incident.URL)
+	return fmt.Sprintf("GCP Alert\n - %q\n - %s\n - <%s>\n", j.Incident.Summary, j.Incident.PolicyName, j.Incident.URL)
 }
 
 // Valid checks that the data is good.
@@ -170,7 +170,7 @@ func (j *GoogleCloudBuild) Message() string {
 		return ""
 	}
 
-	return fmt.Sprintf("GCB: %s %v @ <%s>", sub.Status, sub.Artifacts.Images, sub.LogURL)
+	return fmt.Sprintf("GCB: %s %v @ <%s>\n", sub.Status, sub.Artifacts.Images, sub.LogURL)
 }
 
 // Valid checks that the data is good.
@@ -209,10 +209,54 @@ func jsonToDeployMessage(buf []byte) DataType {
 
 // Message returns a string representation of this object for human consumption.
 func (j *DeployMessage) Message() string {
-	return fmt.Sprintf("Deployed: %q -> %q", j.Deployed, j.Image)
+	return fmt.Sprintf("Deployed: %q -> %q\n", j.Deployed, j.Image)
 }
 
 // Valid checks that the data is good.
 func (j *DeployMessage) Valid() bool {
 	return j.Deployed != "" && j.Image != ""
+}
+
+type GCPError struct {
+	Version   string `json:"version"`
+	Subject   string `json:"subject"`
+	GroupInfo struct {
+		ProjectID  string `json:"project_id"`
+		DetailLink string `json:"detail_link"`
+	} `json:"group_info"`
+	ExceptionInfo struct {
+		Type    string `json:"type"`
+		Message string `json:"message"`
+	} `json:"exception_info"`
+	EventInfo struct {
+		LogMessage     string `json:"log_message"`
+		RequestMethod  string `json:"request_method"`
+		RequestURL     string `json:"request_url"`
+		Referrer       string `json:"referrer"`
+		UserAgent      string `json:"user_agent"`
+		Service        string `json:"service"`
+		Version        string `json:"version"`
+		ResponseStatus string `json:"response_status"`
+	} `json:"event_info"`
+}
+
+func jsonToGCPError(buf []byte) DataType {
+	var data GCPError
+	if err := json.Unmarshal(buf, &data); err != nil {
+		log.Debugw("decoding json to GCPError", zap.Error(err))
+		return nil
+	}
+	log.Debugw("GCPError data decoded", "data", data)
+
+	return &data
+}
+
+// Message returns a string representation of this object for human consumption.
+func (j *GCPError) Message() string {
+	return fmt.Sprintf("GCP Error: %s: %s\n", j.Subject, j.GroupInfo.DetailLink)
+}
+
+// Valid checks that the data is good.
+func (j *GCPError) Valid() bool {
+	return j.Subject != "" && j.GroupInfo.DetailLink != "" && j.GroupInfo.ProjectID != ""
 }
