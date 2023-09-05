@@ -15,4 +15,4 @@ COPY . ./
 
 RUN go get github.com/phogolabs/prana/cmd/prana
 RUN go build -o /go/bin/relay .
-CMD ./run.sh
+CMD /go/bin/relay
