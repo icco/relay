@@ -253,7 +253,7 @@ func jsonToGCPError(buf []byte) DataType {
 
 // Message returns a string representation of this object for human consumption.
 func (j *GCPError) Message() string {
-	return fmt.Sprintf("GCP Error: %q: %s", j.Subject, j.GroupInfo.DetailLink)
+	return fmt.Sprintf("GCP Error: %s: %s", j.Subject, j.GroupInfo.DetailLink)
 }
 
 // Valid checks that the data is good.
