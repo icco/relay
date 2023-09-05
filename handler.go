@@ -44,12 +44,14 @@ func hookHandler(db *sql.DB) http.HandlerFunc {
 
 		var msg string
 		var parseMethod string
+		var raw []byte
 		switch ct {
 		case "application/json":
 			parseMethod = "json"
 			msg = parse.BufferToMessage(buf)
 		case "plain/text":
 			parseMethod = "plaintext"
+			raw = buf
 			msg = string(buf)
 		case "application/x-www-form-urlencoded":
 			parseMethod = "urlencoded"
@@ -64,6 +66,7 @@ func hookHandler(db *sql.DB) http.HandlerFunc {
 				log.Errorw("could not marshal values", "body", string(buf), "values", values, zap.Error(err))
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
+			raw = str
 			msg = parse.BufferToMessage(str)
 		case "":
 			http.Error(w, "empty content type recieved", http.StatusBadRequest)
@@ -80,13 +83,24 @@ func hookHandler(db *sql.DB) http.HandlerFunc {
 			if len(parts) >= 1 && parts[0] == "multipart/form-data" {
 				val := r.FormValue("payload")
 				log.Debugw("attempting form parse", "payload", val)
+				raw = []byte(val)
 				msg = parse.BufferToMessage([]byte(val))
 			}
 		}
 
+		data := map[string]any{
+			"content-type": ct,
+			"raw":          string(raw),
+			"parse-method": parseMethod,
+		}
+		jsonData, err := json.Marshal(data)
+		if err != nil {
+			log.Errorw("could not marshal data", "data", data, zap.Error(err))
+		}
+
 		m := &model.Message{
 			Content:   msg,
-			Message:   []byte("{}"),
+			Message:   jsonData,
 			Published: false,
 		}
 

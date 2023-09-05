@@ -43,6 +43,11 @@ func (m *Message) Create(ctx context.Context, db *sql.DB) error {
 		return err
 	}
 
+	if m.Content == "" {
+		log.Warnw("message content is empty", "message", m)
+		return nil
+	}
+
 	result := dbo.WithContext(ctx).Create(m)
 	log.Debugw("creating message", "message", m, "result", result)
 
