@@ -12,7 +12,6 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/icco/gutil/logging"
-	"github.com/icco/gutil/otel"
 	"go.uber.org/zap"
 
 	_ "github.com/lib/pq"
@@ -42,9 +41,6 @@ func main() {
 	log.Infow("Starting up", "host", fmt.Sprintf("http://localhost:%s", port))
 
 	ctx := context.Background()
-	if err := otel.Init(ctx, log, gcpID, project); err != nil {
-		log.Errorw("could not init opentelemetry", zap.Error(err))
-	}
 
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
@@ -66,7 +62,6 @@ func main() {
 	defer dg.Close()
 
 	r := chi.NewRouter()
-	r.Use(otel.Middleware)
 	r.Use(middleware.RealIP)
 	r.Use(logging.Middleware(log.Desugar(), gcpID))
 
