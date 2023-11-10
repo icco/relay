@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
 	"net/http"
@@ -39,8 +38,6 @@ func main() {
 		port = fromEnv
 	}
 	log.Infow("Starting up", "host", fmt.Sprintf("http://localhost:%s", port))
-
-	ctx := context.Background()
 
 	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
