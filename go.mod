@@ -10,7 +10,7 @@ require (
 	github.com/bwmarrin/discordgo v0.27.1
 	github.com/go-chi/chi/v5 v5.0.11
 	github.com/go-chi/cors v1.2.1
-	github.com/icco/gutil v0.0.0-20231225205306-8491d9f0d3f7
+	github.com/icco/gutil v0.0.0-20231226055340-e0dfddaad70c
 	github.com/lib/pq v1.10.9
 	go.uber.org/zap v1.26.0
 	gorm.io/driver/postgres v1.5.4
