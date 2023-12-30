@@ -28,11 +28,11 @@ func jsonToServarr(buf []byte) DataType {
 
 // Message returns a string representation of this object for human consumption.
 func (j *Servarr) Message() string {
-	return fmt.Sprintf("%s: %s\n", j.InstanceName, j.EventMessage)
+	return fmt.Sprintf("%s: %s: %s\n", j.InstanceName, j.EventType, j.EventMessage)
 }
 
 // Valid checks that the data is good.
 func (j *Servarr) Valid() bool {
-	event := j.EventType == "ApplicationUpdate" || j.EventType == "Health"
+	event := j.EventType == "ApplicationUpdate" || j.EventType == "Health" || j.EventType == "HealthRestored"
 	return event && j.EventMessage != "" && j.InstanceName != ""
 }
